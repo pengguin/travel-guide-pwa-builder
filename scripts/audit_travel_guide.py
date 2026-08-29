@@ -26,6 +26,7 @@ ERROR_PATTERNS = {
     "common secret assignment": re.compile(
         r"(?i)(?:api[_-]?key|secret|token|password)\s*[:=]\s*['\"][^'\"\s]{8,}['\"]"
     ),
+    "unfinished scaffold": re.compile(r"__REPLACE_WITH_" r"FINAL_ITINERARY__"),
 }
 WARNING_PATTERNS = {
     "email address": re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.I),
@@ -40,10 +41,12 @@ ASSET_REF = re.compile(
 
 def iter_files(root: Path):
     for path in root.rglob("*"):
+        relative_path = path.relative_to(root).as_posix()
         if (
             not path.is_file()
             or path.name in SKIP_FILES
             or any(part in SKIP_DIRS for part in path.parts)
+            or relative_path.startswith("assets/starter/")
         ):
             continue
         yield path
@@ -81,8 +84,9 @@ def scan_text(root: Path):
 def check_assets(root: Path, refs: set[str]):
     errors: list[str] = []
     for reference in sorted(refs):
-        candidate = root / "public" / reference.lstrip("/")
-        if not candidate.is_file():
+        relative_reference = reference.lstrip("/")
+        candidates = (root / "public" / relative_reference, root / relative_reference)
+        if not any(candidate.is_file() for candidate in candidates):
             errors.append(f"Missing referenced asset: {reference}")
     return errors
 
@@ -115,13 +119,12 @@ def find_duplicate_images(root: Path):
 
 def check_release(root: Path):
     errors: list[str] = []
-    dist = root / "dist"
-    if not dist.is_dir():
-        return ["Release directory missing: dist/"]
-    if not (dist / "index.html").is_file():
-        errors.append("Release entry missing: dist/index.html")
-    if not any((dist / name).is_file() for name in ("manifest.webmanifest", "manifest.json")):
-        errors.append("PWA manifest missing from dist/")
+    release = root / "dist" if (root / "dist").is_dir() else root
+    label = "dist/" if release.name == "dist" else "project root"
+    if not (release / "index.html").is_file():
+        errors.append(f"Release entry missing from {label}")
+    if not any((release / name).is_file() for name in ("manifest.webmanifest", "manifest.json")):
+        errors.append(f"PWA manifest missing from {label}")
     return errors
 
 

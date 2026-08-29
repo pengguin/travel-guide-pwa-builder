@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="山脉、道路与太阳组成的旅行路书标志">
+  <rect width="512" height="512" rx="112" fill="#173f3b"/>
+  <circle cx="356" cy="154" r="72" fill="#e7ad4f"/>
+  <path d="M72 329 184 188l67 78 63-88 126 151v87H72z" fill="#f6f1e7"/>
+  <path d="m184 188 33 39 34 39 63-88 46 55-46-20-63 83-67-75-58 74z" fill="#72a49b"/>
+  <path d="M210 416c16-71 58-111 122-119-42 34-54 74-36 119z" fill="#d66b48"/>
+</svg>

@@ -1,6 +1,6 @@
 ---
 name: travel-guide-pwa-builder
-description: Build, adapt, verify, package, and optionally publish a deployable, mobile-first multi-page travel guide PWA from a user itinerary or an existing guide codebase. Use for Chinese route books, trip-guide websites, offline travel PWAs, itinerary portals, or requests to turn a proven travel-guide framework into another destination. Covers source verification, structured itinerary data, maps, transport and lodging guidance, budgets, media hygiene, browser QA, deployable ZIP delivery, and privacy-safe GitHub handoff. Do not use as the primary workflow when the requested artifact is only a PDF or a single-file HTML.
+description: Build, adapt, verify, package, and optionally publish a deployable, mobile-first travel guide PWA from trip information alone or from an existing guide codebase. Use for Chinese route books, trip-guide websites, offline travel PWAs, itinerary portals, or requests to turn a proven travel-guide framework into another destination. Includes a dependency-free standalone starter, source verification, structured itinerary data, route visualization, budgets, browser QA, deployable ZIP delivery, and privacy-safe GitHub handoff. Do not use as the primary workflow when the requested artifact is only a PDF or a single-file HTML.
 ---
 
 # Travel Guide PWA Builder
@@ -11,7 +11,7 @@ Build a travel guide that remains useful on a phone during the trip and can be d
 
 1. Inspect the workspace before editing.
 2. Reuse the user's existing guide framework when one is named or clearly established. Preserve its information architecture and interaction patterns unless the user asks for a redesign.
-3. Otherwise scaffold a static React/Vite-style PWA with data separated from components. Prefer hash routing when the hosting provider may not support SPA rewrites.
+3. If no framework or reference is supplied, read [standalone-mode.md](references/standalone-mode.md) and run the bundled `scripts/create_project.py`. A design sample is optional, not a prerequisite. The resulting dependency-free PWA is the baseline; improve it only where the trip requires more capability.
 4. If the request is only a single-file offline HTML, use a single-file itinerary workflow instead. If the request is a print-first PDF, use a guidebook/PDF workflow instead.
 
 ## Lock the brief before research
@@ -85,7 +85,7 @@ Keep presentation components generic and itinerary content in data. Update coupl
 Before delivery:
 
 1. Run the project's production build.
-2. Run `python3 scripts/audit_travel_guide.py <project-path> --release` from this skill directory, or run equivalent checks manually if the project structure differs.
+2. Run `python3 scripts/audit_travel_guide.py <project-path> --release` from this skill directory, or run equivalent checks manually if the project structure differs. The standalone starter intentionally fails until its final-itinerary marker is removed.
 3. Search globally for retired destination names, dates, stale route labels, placeholder text, private paths, and old cache keys.
 4. Preview the production build, not only the development server.
 5. Test representative desktop and mobile widths, every primary route, expandable content, map interactions, navigation, reload behavior, offline fallback, image loading, console errors, and horizontal overflow.

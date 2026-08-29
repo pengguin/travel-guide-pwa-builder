@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#173f3b" />
+    <meta name="description" content="__TITLE__：手机优先、离线可读的旅行路书" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>__TITLE__</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#app">跳到正文</a>
+    <header class="site-header">
+      <a class="brand" href="#overview" aria-label="返回行程总览">
+        <img src="icons/app-icon.svg" alt="" />
+        <span id="brand-title">__TITLE__</span>
+      </a>
+      <p id="header-dates"></p>
+    </header>
+
+    <main id="app" tabindex="-1" aria-live="polite"></main>
+
+    <nav class="bottom-nav" aria-label="主要页面">
+      <a href="#overview" data-route="overview">总览</a>
+      <a href="#itinerary" data-route="itinerary">日程</a>
+      <a href="#map" data-route="map">路线</a>
+      <a href="#guides" data-route="guides">指南</a>
+      <a href="#tools" data-route="tools">工具</a>
+    </nav>
+
+    <noscript>此路书需要启用 JavaScript 才能显示行程内容。</noscript>
+    <script src="data/trip-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

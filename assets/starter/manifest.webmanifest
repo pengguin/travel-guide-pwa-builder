@@ -1,0 +1,19 @@
+{
+  "name": "__TITLE__",
+  "short_name": "__SHORT_TITLE__",
+  "description": "手机优先、离线可读的旅行路书",
+  "start_url": "./#overview",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f1e7",
+  "theme_color": "#173f3b",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "icons/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
