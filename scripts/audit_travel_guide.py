@@ -16,6 +16,7 @@ TEXT_SUFFIXES = {
 }
 IMAGE_SUFFIXES = {".avif", ".gif", ".jpeg", ".jpg", ".png", ".webp"}
 SKIP_DIRS = {".git", ".vite", "coverage", "node_modules"}
+SKIP_FILES = {"package-lock.json", "pnpm-lock.yaml", "yarn.lock"}
 
 ERROR_PATTERNS = {
     "macOS home path": re.compile(r"/Users/[^/\s'\"<>]+/"),
@@ -32,14 +33,18 @@ WARNING_PATTERNS = {
     "local host URL": re.compile(r"https?://(?:localhost|127\.0\.0\.1)(?::\d+)?"),
 }
 ASSET_REF = re.compile(
-    r"(?:src|href)\s*=\s*['\"](/(?:images|icons)/[^'\"?#]+)['\"]|"
-    r"['\"](/(?:images|icons)/[^'\"?#]+)['\"]"
+    r"(?:src|href)\s*=\s*['\"`](/?(?:images|icons)/[^'\"`?#]+)['\"`]|"
+    r"['\"`](/?(?:images|icons)/[^'\"`?#]+)['\"`]"
 )
 
 
 def iter_files(root: Path):
     for path in root.rglob("*"):
-        if not path.is_file() or any(part in SKIP_DIRS for part in path.parts):
+        if (
+            not path.is_file()
+            or path.name in SKIP_FILES
+            or any(part in SKIP_DIRS for part in path.parts)
+        ):
             continue
         yield path
 
@@ -84,7 +89,23 @@ def check_assets(root: Path, refs: set[str]):
 
 def find_duplicate_images(root: Path):
     by_hash: dict[str, list[str]] = {}
-    for path in iter_files(root):
+    image_roots = [
+        candidate
+        for candidate in (
+            root / "public" / "images",
+            root / "src" / "assets" / "images",
+            root / "assets" / "images",
+        )
+        if candidate.is_dir()
+    ]
+    candidates = (
+        (path for image_root in image_roots for path in image_root.rglob("*"))
+        if image_roots
+        else iter_files(root)
+    )
+    for path in candidates:
+        if not path.is_file():
+            continue
         if path.suffix.lower() not in IMAGE_SUFFIXES:
             continue
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
