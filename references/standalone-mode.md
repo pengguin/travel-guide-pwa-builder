@@ -14,10 +14,11 @@ python3 scripts/create_project.py \
   --start-date YYYY-MM-DD \
   --end-date YYYY-MM-DD \
   --origin "Origin" \
-  --destinations "Stop A" "Stop B" "Stop C"
+  --destinations "Stop A" "Stop B" "Stop C" \
+  --theme auto
 ```
 
-The output is a dependency-free static PWA with five hash-routed views: overview, itinerary, route map, practical guides, and tools. It includes an offline app shell, install manifest, schematic route visualization, expandable daily cards, phase filtering, budget totals, a device-local checklist, print styles, and calendar export.
+The output is a dependency-free static PWA with five hash-routed views: overview, itinerary, route map, practical guides, and tools. It includes a visible local launch shell, offline app shell, install manifest, schematic route visualization, expandable daily cards, phase filtering, budget totals, a device-local checklist, print styles, and calendar export. `--theme auto` uses conservative destination-name hints; choose `heritage`, `desert`, `mountain`, `coast`, `forest`, `tropical`, `polar`, or `urban` explicitly when research or representative imagery indicates a better fit. Read [destination-theming.md](destination-theming.md) before making that choice final.
 
 ## Complete the content
 
@@ -35,6 +36,8 @@ Complete these fields:
 - sources supporting dynamic or high-risk claims.
 
 Replace the neutral SVG app icon and theme colors when destination-specific branding materially helps. The starter contains no external photos; add only relevant, locally packaged, credited images if the content benefits from them.
+
+Before a production iPhone release, replace the neutral SVG-only install icon with local PNG `apple-touch-icon`, 192px, 512px, and maskable variants. Keep the SVG only as an optional browser favicon. Read [pwa-offline.md](pwa-offline.md) for the cold-start and offline acceptance test.
 
 ## Preview and package
 

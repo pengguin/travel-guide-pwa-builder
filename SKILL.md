@@ -1,6 +1,8 @@
 ---
 name: travel-guide-pwa-builder
 description: Build, adapt, verify, package, and optionally publish a deployable, mobile-first travel guide PWA from trip information alone or from an existing guide codebase. Use for Chinese route books, trip-guide websites, offline travel PWAs, itinerary portals, or requests to turn a proven travel-guide framework into another destination. Includes a dependency-free standalone starter, source verification, structured itinerary data, route visualization, budgets, browser QA, deployable ZIP delivery, and privacy-safe GitHub handoff. Do not use as the primary workflow when the requested artifact is only a PDF or a single-file HTML.
+metadata:
+  version: "1.2.0"
 ---
 
 # Travel Guide PWA Builder
@@ -51,7 +53,7 @@ Use stable IDs and derive repeated labels, counts, route filters, and totals fro
 
 ## Design the information architecture
 
-Make the first screen answer, within about ten seconds: where, when, how many days, the route, today's phase structure, the hardest connections, and the expected budget.
+Make the first screen useful within about ten seconds. For a field-use guide, prioritize the current day, current city, the three most important actions, the next transport, and the next hard deadline; keep the full route, budget, and research detail on dedicated pages. For a planning-first guide, an overview may lead instead. Follow the user's stated hierarchy rather than forcing both modes onto one crowded home screen.
 
 Recommended sections:
 
@@ -64,6 +66,12 @@ Recommended sections:
 7. Tools: checklist, budget calculator, emergency details, offline notes, and optional calendar export.
 
 Use large type, strong hierarchy, generous spacing, restrained colors, and complete images. Put secondary detail behind expandable sections. Do not turn the main view into a dense article or thin-line table.
+
+## Adapt the visual theme to the destination
+
+Derive the palette from the destination's landscape, built environment, materials, climate, and travel mood rather than reusing one house palette or copying flag colors. Keep semantic roles stable (`paper`, `surface`, `ink`, `primary`, `secondary`, `highlight`, `soft`, `danger`) so components and contrast behavior remain reusable. Use one dominant dark color, one restrained accent, and neutral surfaces; destination character should come from color, imagery, and small material cues, not decorative clutter.
+
+When using the standalone starter, pass `--theme auto` or choose a named family with `--theme heritage|desert|mountain|coast|forest|tropical|polar|urban`. Auto selection is a starting point, not evidence about a place. Review the chosen palette against the actual itinerary and override the family when the destination's visual identity differs from the name heuristic. Read [destination-theming.md](references/destination-theming.md) before creating a new destination theme or substantially recoloring an existing guide.
 
 ## Media rules
 
@@ -82,14 +90,27 @@ Show both per-person and group totals when party size matters. Separate fixed pa
 
 Keep presentation components generic and itinerary content in data. Update coupled elements together: navigation, phases, dates, map filters, calendar export, manifest, service-worker cache name, icons, page title, budget totals, and source list.
 
+### Cold start and offline invariants
+
+- Render a local App Shell or meaningful launch shell before framework hydration or route chunks finish. Do not use a loading animation to hide an empty root.
+- Bundle the itinerary, tickets, hotel/transport notes, packing, emergency information, and core media locally. Core reading must not wait for an API, remote font, map tile, or weather request.
+- Register the service worker after the first render; registration and activation must not block the App Shell.
+- Precache every core HTML/CSS/JS chunk, local image, icon, manifest, and offline fallback. If chunks are discovered only after build, generate the precache list from the final build output.
+- When matching precached responses, account for `Vary` headers. A static preview server can make a precached CSS/JS response miss unless the worker or cache library uses an equivalent of `ignoreVary: true`.
+- Version caches per release, remove only caches owned by the guide, and prove that a new release replaces stale entry HTML and chunks.
+- Hash routing or a host rewrite must support standalone `start_url`, nested-route reloads, and subpath deployments. A relative `base`, `scope`, and `start_url` must agree.
+- Online-only features such as map tiles and real-time weather must fail locally and visibly without crashing the guide.
+
+Read [pwa-offline.md](references/pwa-offline.md) whenever the request includes offline use, iPhone Add to Home Screen, a white startup screen, service-worker changes, or a deployable PWA release.
+
 Before delivery:
 
 1. Run the project's production build.
 2. Run `python3 scripts/audit_travel_guide.py <project-path> --release` from this skill directory, or run equivalent checks manually if the project structure differs. The standalone starter intentionally fails until its final-itinerary marker is removed.
 3. Search globally for retired destination names, dates, stale route labels, placeholder text, private paths, and old cache keys.
 4. Preview the production build, not only the development server.
-5. Test representative desktop and mobile widths, every primary route, expandable content, map interactions, navigation, reload behavior, offline fallback, image loading, console errors, and horizontal overflow.
-6. Verify the install icon and PWA manifest on a mobile-sized viewport.
+5. Test representative desktop and mobile widths, every primary route, expandable content, map interactions, navigation, reload behavior, offline cold start, image loading, console errors, and horizontal overflow.
+6. Verify the install icon and PWA manifest on a mobile-sized viewport. For a physical iPhone requirement, repeat on the deployed HTTPS URL and state explicitly if that step remains untested.
 7. Package the contents of the deploy directory at ZIP root level. Open the archive and confirm it contains the entry HTML and assets, not an unnecessary parent folder.
 
 Read [qa-and-release.md](references/qa-and-release.md) for the complete release gate.

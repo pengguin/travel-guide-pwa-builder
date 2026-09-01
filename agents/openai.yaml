@@ -1,4 +1,4 @@
 interface:
   display_name: "Travel Guide PWA Builder"
   short_description: "Build and verify deployable mobile travel-guide PWAs"
-  default_prompt: "Use $travel-guide-pwa-builder to build a sourced, mobile-first, deployable travel PWA from my trip information alone, validate it, and prepare a privacy-safe release."
+  default_prompt: "Use $travel-guide-pwa-builder to build a sourced, mobile-first, deployable travel PWA from my trip information alone, adapt the visual theme to the destination, validate it, and prepare a privacy-safe release."

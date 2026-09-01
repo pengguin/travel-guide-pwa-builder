@@ -30,7 +30,14 @@ class AuditTravelGuideTests(unittest.TestCase):
             )
             (root / "dist").mkdir()
             (root / "dist" / "index.html").write_text("<main>Example Trip</main>", encoding="utf-8")
-            (root / "dist" / "manifest.webmanifest").write_text("{}", encoding="utf-8")
+            (root / "dist" / "manifest.webmanifest").write_text(
+                '{"start_url":"./","scope":"./","display":"standalone","icons":[{"src":"icon.png"}]}',
+                encoding="utf-8",
+            )
+            (root / "dist" / "sw.js").write_text(
+                "const APP_SHELL=[]; caches.match(request,{ignoreVary:true});",
+                encoding="utf-8",
+            )
             result = self.run_audit(root, "--release")
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
@@ -64,6 +71,34 @@ class AuditTravelGuideTests(unittest.TestCase):
             result = self.run_audit(root)
             self.assertEqual(result.returncode, 0)
             self.assertIn("Duplicate image content", result.stdout)
+
+    def test_release_requires_service_worker(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "index.html").write_text("<main>Example</main>", encoding="utf-8")
+            (root / "manifest.webmanifest").write_text(
+                '{"start_url":"./","scope":"./","display":"standalone","icons":[{"src":"icon.png"}]}',
+                encoding="utf-8",
+            )
+            result = self.run_audit(root, "--release")
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("Service worker missing", result.stdout)
+
+    def test_empty_framework_root_warns(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "index.html").write_text('<div id="root"></div>', encoding="utf-8")
+            (root / "manifest.webmanifest").write_text(
+                '{"start_url":"./","scope":"./","display":"standalone","icons":[{"src":"icon.png"}]}',
+                encoding="utf-8",
+            )
+            (root / "sw.js").write_text(
+                "const APP_SHELL=[]; caches.match(request,{ignoreVary:true});",
+                encoding="utf-8",
+            )
+            result = self.run_audit(root, "--release")
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("empty framework root", result.stdout)
 
 
 if __name__ == "__main__":

@@ -3,12 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#173f3b" />
+    <meta name="theme-color" content="__THEME_PRIMARY__" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="__TITLE__" />
     <meta name="description" content="__TITLE__：手机优先、离线可读的旅行路书" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icons/app-icon.svg" />
     <link rel="stylesheet" href="styles.css" />
     <title>__TITLE__</title>
+    <style>
+      html,body{margin:0;background:__THEME_PAPER__;color:__THEME_INK__;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+      .launch-shell{min-height:62vh;display:grid;place-content:center;gap:8px;padding:24px;text-align:center;background:__THEME_PRIMARY__;color:__THEME_ON_PRIMARY__}
+      .launch-shell strong{font-size:1.3rem}.launch-shell span{color:__THEME_ON_PRIMARY_MUTED__;font-size:.9rem}
+    </style>
   </head>
   <body>
     <a class="skip-link" href="#app">跳到正文</a>
@@ -20,7 +29,7 @@
       <p id="header-dates"></p>
     </header>
 
-    <main id="app" tabindex="-1" aria-live="polite"></main>
+    <main id="app" tabindex="-1" aria-live="polite"><section class="launch-shell"><strong>__TITLE__</strong><span>正在打开本地路书</span></section></main>
 
     <nav class="bottom-nav" aria-label="主要页面">
       <a href="#overview" data-route="overview">总览</a>

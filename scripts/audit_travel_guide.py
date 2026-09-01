@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import re
 import sys
 from pathlib import Path
@@ -119,13 +120,48 @@ def find_duplicate_images(root: Path):
 
 def check_release(root: Path):
     errors: list[str] = []
+    warnings: list[str] = []
     release = root / "dist" if (root / "dist").is_dir() else root
     label = "dist/" if release.name == "dist" else "project root"
-    if not (release / "index.html").is_file():
+    index_path = release / "index.html"
+    if not index_path.is_file():
         errors.append(f"Release entry missing from {label}")
-    if not any((release / name).is_file() for name in ("manifest.webmanifest", "manifest.json")):
+    manifest_path = next(
+        (release / name for name in ("manifest.webmanifest", "manifest.json") if (release / name).is_file()),
+        None,
+    )
+    if manifest_path is None:
         errors.append(f"PWA manifest missing from {label}")
-    return errors
+    else:
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            errors.append(f"Invalid PWA manifest JSON in {label}")
+        else:
+            for field in ("start_url", "scope", "display", "icons"):
+                if not manifest.get(field):
+                    errors.append(f"PWA manifest missing {field} in {label}")
+            if manifest.get("display") not in {"standalone", "fullscreen", "minimal-ui"}:
+                warnings.append(f"PWA display is not install-oriented in {label}")
+
+    worker_path = next(
+        (release / name for name in ("sw.js", "service-worker.js") if (release / name).is_file()),
+        None,
+    )
+    if worker_path is None:
+        errors.append(f"Service worker missing from {label}")
+    else:
+        worker = worker_path.read_text(encoding="utf-8", errors="replace")
+        if not re.search(r"(?:addAll|precacheAndRoute|APP_SHELL|\bCORE\b)", worker):
+            warnings.append(f"No visible precache signal in {relative(worker_path, root)}")
+        if "ignoreVary" not in worker and "workbox" not in worker.lower():
+            warnings.append(f"Service worker cache matching does not visibly handle Vary headers: {relative(worker_path, root)}")
+
+    if index_path.is_file():
+        index = index_path.read_text(encoding="utf-8", errors="replace")
+        if re.search(r'<(?:div|main)\s+[^>]*id=["\'](?:root|app)["\'][^>]*>\s*</(?:div|main)>', index):
+            warnings.append(f"Entry HTML has an empty framework root and no visible launch shell in {label}")
+    return errors, warnings
 
 
 def main() -> int:
@@ -144,7 +180,9 @@ def main() -> int:
     for paths in find_duplicate_images(root):
         warnings.append("Duplicate image content: " + ", ".join(paths))
     if args.release:
-        errors.extend(check_release(root))
+        release_errors, release_warnings = check_release(root)
+        errors.extend(release_errors)
+        warnings.extend(release_warnings)
 
     print(f"Travel guide audit: {root}")
     print(f"Referenced local assets checked: {len(refs)}")

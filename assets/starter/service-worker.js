@@ -1,4 +1,7 @@
-const CACHE_NAME = '__CACHE_NAME__';
+const CACHE_PREFIX = '__CACHE_PREFIX__';
+const VERSION = '__CACHE_NAME__';
+const PRECACHE = `${VERSION}-precache`;
+const RUNTIME = `${VERSION}-runtime`;
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,26 +13,62 @@ const APP_SHELL = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
+  event.waitUntil((async () => {
+    const cache = await caches.open(PRECACHE);
+    await cache.addAll(APP_SHELL);
+    await self.skipWaiting();
+  })());
+});
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys
+        .filter((key) => key.startsWith(CACHE_PREFIX) && key !== PRECACHE && key !== RUNTIME)
+        .map((key) => caches.delete(key)),
+    );
+    await self.clients.claim();
+  })());
 });
 
-self.addEventListener('activate', (event) => {
+async function cachedAppShell(event) {
+  const cache = await caches.open(PRECACHE);
+  const cached = await cache.match('./index.html', { ignoreVary: true });
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
+    fetch(event.request)
+      .then((response) => response.ok && cache.put('./index.html', response.clone()))
+      .catch(() => {}),
   );
-  self.clients.claim();
-});
+  return cached || new Response(
+    '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><h1>旅行路书</h1><p>离线安装尚未完成，请恢复网络并在线打开一次。</p>',
+    { headers: { 'Content-Type': 'text/html; charset=utf-8' } },
+  );
+}
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
-  event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      if (response.ok && new URL(event.request.url).origin === self.location.origin) {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+  const request = event.request;
+  if (request.method !== 'GET') return;
+  const url = new URL(request.url);
+
+  if (request.mode === 'navigate') {
+    event.respondWith(cachedAppShell(event));
+    return;
+  }
+
+  if (url.origin !== self.location.origin) return;
+
+  event.respondWith((async () => {
+    const cached = await caches.match(request, { ignoreVary: true });
+    if (cached) return cached;
+    try {
+      const response = await fetch(request);
+      if (response.ok) {
+        const cache = await caches.open(RUNTIME);
+        await cache.put(request, response.clone());
       }
       return response;
-    }).catch(() => caches.match('./index.html')))
-  );
+    } catch {
+      return new Response('', { status: 503, statusText: 'Offline' });
+    }
+  })());
 });

@@ -183,6 +183,8 @@
   window.addEventListener('hashchange', renderRoute);
   renderRoute();
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    const register = () => navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    if ('requestIdleCallback' in window) window.requestIdleCallback(register, { timeout: 1800 });
+    else window.setTimeout(register, 250);
   }
 })();

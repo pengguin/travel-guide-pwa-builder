@@ -2,11 +2,13 @@
   "name": "__TITLE__",
   "short_name": "__SHORT_TITLE__",
   "description": "手机优先、离线可读的旅行路书",
+  "id": "./#overview",
   "start_url": "./#overview",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f6f1e7",
-  "theme_color": "#173f3b",
+  "orientation": "any",
+  "background_color": "__THEME_PAPER__",
+  "theme_color": "__THEME_PRIMARY__",
   "lang": "zh-CN",
   "icons": [
     {

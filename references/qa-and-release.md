@@ -25,8 +25,19 @@ Use this checklist for every deployable handoff.
 - Reload nested routes; verify routing survives static hosting.
 - Exercise expandable cards, filters, map layers, navigation, calculators, and calendar export.
 - Inspect console errors, failed requests, broken images, and horizontal overflow.
-- Test a production reload after service-worker registration and check the offline fallback where supported.
+- On a fresh origin, visit only the home route, wait for service-worker installation, then stop the local server or enable browser offline mode. Reload and open several previously unvisited lazy routes. This distinguishes true precache from runtime caching of pages already visited online.
+- Include at least itinerary, tickets/transport, packing or tools, hotel/food, emergency information, and the map fallback in the offline route sample.
+- Restore the server/network, reload, and confirm the current release replaces stale entry HTML and chunks without console errors.
+- If the project uses lazy CSS/JS chunks, verify offline requests hit precache even when responses carry `Vary: Origin`; test the actual preview server rather than assuming URL equality is sufficient.
 - Confirm page title, manifest name, theme color, icons, and service-worker cache version match the current guide.
+- For iOS/Add to Home Screen, check `apple-mobile-web-app-capable`, status-bar style, touch icon, safe-area viewport, `display: standalone`, `start_url`, `scope`, and standalone navigation behavior.
+
+## Cold-start evidence
+
+- Inspect the raw entry HTML: it must contain a meaningful local launch/App Shell, not only an empty framework root.
+- Confirm core rendering does not await remote fonts, map tiles, weather, or API data.
+- Record whether the test was a desktop/browser simulation, a deployed-domain test, or a physical iPhone test. Never describe a local preview or stopped-server test as a physical Add-to-Home-Screen result.
+- A short local launch shell is acceptable; a long blank screen followed by content is not.
 
 ## Release archive
 
