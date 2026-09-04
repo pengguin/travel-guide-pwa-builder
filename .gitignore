@@ -8,3 +8,11 @@ dist/
 coverage/
 *.log
 *.zip
+.openai/
+.dev.vars*
+.wrangler/
+*.sqlite*
+*.db
+*.db-*
+private-data/
+playwright/.auth/

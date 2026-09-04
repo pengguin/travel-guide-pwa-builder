@@ -2,6 +2,8 @@
 
 A reusable Codex skill for building mobile-first, offline-capable travel guide PWAs from itinerary information alone or from an existing guide codebase.
 
+Version 2.0 uses **ChatGPT Sites as its only built-in publishing workflow**. It delegates platform setup, authentication integration, packaging and release to the current official Sites skills rather than freezing a provider SDK in this repository. Local-only generation still works without Sites or a reference sample.
+
 ## What it provides
 
 - structured itinerary, transport, stay, budget, packing, and risk models;
@@ -9,7 +11,14 @@ A reusable Codex skill for building mobile-first, offline-capable travel guide P
 - a dependency-free static PWA starter;
 - App Shell, service-worker, offline fallback, and iOS standalone guidance;
 - privacy, content, asset, and release audits;
-- production-oriented browser and offline QA gates.
+- production-oriented browser and offline QA gates;
+- current-day/countdown logic, mobile form and safe-area guidance, consistent navigation and collapsible tools;
+- optional My/member workflows, editable private records, repeatable access-code/renewal contracts and isolated offline/sync design;
+- privacy-aware Sites integration with explicit public/shared access approval.
+
+## Capability boundaries
+
+The bundled static starter runs locally and includes countdown, day overview, previous/next controls, collapsible tools, local checklist storage and offline public files. It intentionally has no login, private uploads or cloud synchronization. For hosted/member features, the agent uses the installed Sites plugin and implements the requested backend from the contracts in `references/`; no live user's application, accounts or database is bundled here. No alternative hosting-provider deployment scripts are included.
 
 ## Install
 
@@ -41,7 +50,8 @@ The generated scaffold is intentionally incomplete. Replace its example itinerar
 
 ```bash
 python3 -m unittest discover -s tests -v
+node --test tests/*.test.cjs
 python3 scripts/audit_travel_guide.py /path/to/guide --release
 ```
 
-The repository contains no real itinerary, ticket, account, traveler, credential, or private deployment data.
+The audit script checks static releases, not Sites Worker runtime/authorization. Device/browser and deployed-account checks must be reported separately. The repository contains no real itinerary, ticket, account, traveler, credential, or private deployment data.

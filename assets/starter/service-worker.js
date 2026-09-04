@@ -7,6 +7,7 @@ const APP_SHELL = [
   './index.html',
   './styles.css',
   './app.js',
+  './trip-state.js',
   './data/trip-data.js',
   './manifest.webmanifest',
   './icons/app-icon.svg',
@@ -31,14 +32,9 @@ self.addEventListener('activate', (event) => {
   })());
 });
 
-async function cachedAppShell(event) {
+async function cachedAppShell() {
   const cache = await caches.open(PRECACHE);
   const cached = await cache.match('./index.html', { ignoreVary: true });
-  event.waitUntil(
-    fetch(event.request)
-      .then((response) => response.ok && cache.put('./index.html', response.clone()))
-      .catch(() => {}),
-  );
   return cached || new Response(
     '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><h1>旅行路书</h1><p>离线安装尚未完成，请恢复网络并在线打开一次。</p>',
     { headers: { 'Content-Type': 'text/html; charset=utf-8' } },
@@ -49,9 +45,13 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
+  const scope = new URL('./', self.location.href);
+  // Explicit public allowlist: never cache API/auth/member responses.
+  const publicPaths = new Set(APP_SHELL.map((path) => new URL(path, scope).pathname));
+  if (url.origin !== scope.origin || !publicPaths.has(url.pathname)) return;
 
   if (request.mode === 'navigate') {
-    event.respondWith(cachedAppShell(event));
+    event.respondWith(cachedAppShell());
     return;
   }
 

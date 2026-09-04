@@ -9,6 +9,7 @@ import json
 import re
 import shutil
 import sys
+from datetime import date
 from pathlib import Path
 
 
@@ -146,6 +147,11 @@ def main() -> int:
 
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.start_date) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.end_date):
         parser.error("start and end dates must use YYYY-MM-DD")
+    try:
+        date.fromisoformat(args.start_date)
+        date.fromisoformat(args.end_date)
+    except ValueError:
+        parser.error("start and end dates must be valid calendar dates")
     if args.start_date > args.end_date:
         parser.error("start date must not be after end date")
 
@@ -161,6 +167,8 @@ def main() -> int:
 
     short_title = args.short_title or args.title[:8]
     trip_id = args.trip_id or slugify(args.title)
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", trip_id):
+        parser.error("trip-id must contain lowercase letters, digits and single hyphens")
     destinations = " → ".join(args.destinations)
     theme_name, theme = choose_theme(args.theme, args.destinations)
     colors = theme_replacements(theme)

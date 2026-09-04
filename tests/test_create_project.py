@@ -40,7 +40,7 @@ class CreateProjectTests(unittest.TestCase):
 
     def create(
         self, output: Path, destinations: tuple[str, ...] = ("Stop A", "Stop B"),
-        theme: str = "auto",
+        theme: str = "auto", start: str = "2030-01-02",
     ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [
@@ -48,7 +48,7 @@ class CreateProjectTests(unittest.TestCase):
                 "--output", str(output),
                 "--title", "Example Journey",
                 "--short-title", "Journey",
-                "--start-date", "2030-01-02",
+                "--start-date", start,
                 "--end-date", "2030-01-05",
                 "--origin", "Origin City",
                 "--destinations", *destinations,
@@ -65,7 +65,7 @@ class CreateProjectTests(unittest.TestCase):
             result = self.create(output)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             for relative in (
-                "index.html", "styles.css", "app.js", "data/trip-data.js",
+                "index.html", "styles.css", "app.js", "trip-state.js", "data/trip-data.js",
                 "manifest.webmanifest", "service-worker.js", "icons/app-icon.svg",
             ):
                 self.assertTrue((output / relative).is_file(), relative)
@@ -105,6 +105,14 @@ class CreateProjectTests(unittest.TestCase):
             result = self.create(output)
             self.assertEqual(result.returncode, 2)
             self.assertIn("refusing to overwrite", result.stderr)
+
+    def test_rejects_invalid_calendar_date_before_creating_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "guide"
+            result = self.create(output, start="2029-02-30")
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("valid calendar dates", result.stderr)
+            self.assertFalse(output.exists())
 
     def test_scaffold_must_be_finalized_before_release(self):
         with tempfile.TemporaryDirectory() as directory:

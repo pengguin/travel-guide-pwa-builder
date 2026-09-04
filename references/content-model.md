@@ -49,6 +49,16 @@ Use this reference when creating or refactoring the guide's data layer.
 - `sourceIds`, `verifiedAt`, `needsRecheck`, `uncertaintyNote`
 - `bookingDeadline`, `fallbackOptions`
 
+Every actionable transfer also needs a Transport Box: `from`, `to`, recommended mode, duration range, suggested departure, latest safe departure, target arrival, cost range/currency and cautions. Distinguish planning estimates from booked times. Include the relevant terminal/station, queue/traffic buffer, meal window and delay Plan B. Do not infer a 'latest safe departure' as an operator guarantee.
+
+### Visibility and member overlays
+
+Assign an explicit `visibility` to records and fields; do not rely on CSS to hide private data. Model a public segment separately from an authorized booked-ticket overlay. Private records need immutable `tripId`/`memberId`, server ownership, provenance, revision and update time. Merge selected shared segments and personal segments into one stable, chronological view; no matching by display name. Read `member-data.md` for auth, stay records, expiry and sync contracts.
+
+### Preparation task
+
+Use stable `id`, `category`, `label`, optional `dueDate` or departure-relative offset, `reminderOffset`, `completedAt`, and ownership scope. Keep calendar dates distinct from instants/timezones. Store user deadline edits separately from generated recommendations so a route update cannot erase them.
+
 ### Recommendation
 
 For stays and food, include `id`, `city`, `area`, `name`, `type`, `priceBand`, `whyItFits`, `bookingAdvice`, `sourceIds`, and `verifiedAt`. Avoid unsupported ratings.

@@ -22,9 +22,11 @@ Precache everything needed to read the guide:
 - entry HTML and offline fallback;
 - shared CSS/JS plus every lazy route chunk and extracted route CSS;
 - manifest, icons, touch icon, and local core images;
-- itinerary, booked tickets, hotels, transfers, packing, emergency information, and source notes.
+- public itinerary, generic transfers/stay/packing notes, emergency information and public sources.
 
-Runtime-cache optional same-origin content and bounded map tiles where appropriate. Do not make remote tiles, real-time weather, external navigation, or live prices part of the core startup contract. Show an explicit offline state inside those modules.
+Private booked tickets, hotel confirmations, attachments and personal equipment must not be in the public bundle, HTML, service-worker precache or shared runtime cache. Fetch them only after server authorization, optionally store them in a separate member-scoped offline store, and implement logout, expiry and account-switch handling as specified in `member-data.md`. First authentication/private download requires a network connection. Do not claim instantaneous remote revocation of an already disconnected device.
+
+Runtime-cache explicitly allowlisted public assets only. Same-origin does not mean public: never blanket-cache API, auth, member or attachment routes. Optional map tiles require provider permission and bounded storage. Remote tiles, weather, external navigation and live prices are not part of core startup; show an explicit offline state inside those modules.
 
 ## Bundled-app pattern
 
@@ -32,13 +34,13 @@ For Vite, Rollup, or another hashed build, generate the service-worker precache 
 
 Use cache keys owned by the guide, for example `<guide>-<release>-precache` and `<guide>-<release>-runtime`. During activation, delete only older caches with the same guide prefix.
 
-Cache matching must account for preview/CDN response variation. When using the Cache API directly, `caches.match(request, { ignoreVary: true })` is often necessary for static CSS/JS whose response includes `Vary: Origin`. Workbox or another library is acceptable when its behavior is verified.
+Cache matching must account for preview/CDN response variation. Restrict `ignoreVary: true` to verified public static resources (for example CSS varying only by Origin). Never ignore user/session variation on personal responses. Workbox or another library is acceptable when verified.
 
-Navigation should return the cached App Shell immediately and refresh it in the background. Install must finish caching all core resources before `skipWaiting`; activation can claim clients only after the new core cache is complete.
+Public navigation should return a cached App Shell immediately. Update HTML and its referenced assets as one complete release; do not replace cached HTML alone while retaining incompatible JS/CSS. Keep old hashed assets while old clients need them, or prompt a controlled reload. Install must finish caching all core resources before activation. A real server/auth endpoint must not fall back to a successful HTML shell.
 
 ## Dependency-free starter pattern
 
-The bundled starter precaches all static files because it has no generated chunks. Keep the launch content in `index.html`, replace it synchronously from local `trip-data.js`, and register the worker after initial render during idle time.
+The bundled starter precaches its explicit public file list, including `trip-state.js`, because it has no generated chunks. Keep launch content in `index.html`, replace it synchronously from local `trip-data.js`, and register the worker after initial render during idle time. Add every new core public image/file to that list and bump the worker release name. It deliberately does not intercept arbitrary same-origin URLs. Do not reuse this static worker unchanged for a server-backed Sites project.
 
 If the starter gains code splitting or generated assets, replace the static list with a build-generated list before release.
 
@@ -63,3 +65,4 @@ Include Apple mobile-web-app metadata, a PNG touch icon, `viewport-fit=cover`, s
 6. Inspect failed requests and console errors.
 7. Restore the network/server and verify the current cache version activates without serving stale HTML or missing chunks.
 8. Separately repeat on the deployed HTTPS domain and physical iPhone when the user requires genuine iOS acceptance.
+9. For private mode, download authorized synthetic test data online, then verify offline reading and expiry behavior. Switch users/logout and prove private records cannot reappear through a shared cache or stale request. Never copy production records into test fixtures.

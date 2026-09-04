@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="__THEME_PRIMARY__" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="__TITLE__" />
     <meta name="description" content="__TITLE__：手机优先、离线可读的旅行路书" />
     <link rel="manifest" href="manifest.webmanifest" />
@@ -39,8 +39,10 @@
       <a href="#tools" data-route="tools">工具</a>
     </nav>
 
+    <button class="button back-top" id="back-top" hidden aria-label="回到顶部">↑ 顶部</button>
     <noscript>此路书需要启用 JavaScript 才能显示行程内容。</noscript>
     <script src="data/trip-data.js"></script>
+    <script src="trip-state.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

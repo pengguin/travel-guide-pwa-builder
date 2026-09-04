@@ -1,6 +1,6 @@
 # Standalone generation mode
 
-Read this reference when the user provides no existing guide, design sample, or codebase.
+Read this reference for local/portable static generation without a server. A design sample is not required. For hosted or multi-user work, route through `sites-workflow.md` instead; this starter does not provide server authentication, private uploads or cloud sync.
 
 ## Initialize
 
@@ -22,6 +22,8 @@ The output is a dependency-free static PWA with five hash-routed views: overview
 
 ## Complete the content
 
+The starter also includes a device-date countdown/current-day card, shareable public day list, matching previous/next day buttons, collapsed tool modules, recoverable checklist storage, back-to-top control and print expansion. `trip-state.js` is tested separately. The route view is a schematic, not a geographic map engine. Advanced map-provider links, member management, font settings and reverse-planning tasks are implementation contracts in the references, not prebuilt features of this minimal starter.
+
 Edit `data/trip-data.js` using the final user brief and current research. Remove the final-itinerary scaffold marker only after all scaffold content has been replaced.
 
 Complete these fields:
@@ -41,7 +43,7 @@ Before a production iPhone release, replace the neutral SVG-only install icon wi
 
 ## Preview and package
 
-The generated source is already the deployable directory. Preview it with a local static server, test it according to `qa-and-release.md`, then ZIP its contents at archive root. If a hosting provider needs a build directory, copy the verified files into `dist/` before using the release audit.
+The generated source is already the portable deploy directory. Preview it with a local static server, test it according to `qa-and-release.md`, then ZIP its contents at archive root when requested. For Sites static publishing, follow `sites-workflow.md` and the official hosting skill; use a supported public output directory and its archive helper, not a provider-specific uploader.
 
 ## Completion condition
 

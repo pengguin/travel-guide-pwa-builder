@@ -19,11 +19,15 @@ Use neutral placeholders such as `Example Trip`, `YYYY-MM-DD`, `/path/to/project
 
 Preserve the reusable method: information architecture, data contracts, source hierarchy, uncertainty labels, budget formulas, QA checks, and packaging steps. Abstract the itinerary and visual theme.
 
+For a skill update, write neutral instructions and synthetic fixtures instead of copying the live app. Do not include `.openai/hosting.json`, production databases/seeds, `.dev.vars`, member exports, session stores, access-code digests, original screenshots, private attachment storage, analytics or account-specific allowlists. Remove real flight numbers, travel dates, paid prices and named personal equipment from examples. A blanked display name does not anonymize the rest of a booking.
+
+Distinguish four destinations: public client bundle, private authorized server data, Sites source archive, and public skill GitHub repository. A private API is not protection if the same records are shipped in the client bundle or committed to a public source repository. Tests must use fabricated records. Review filenames, binary metadata, staged contents and any history introduced by the push, not only the final web page.
+
 ## Pre-push review
 
 1. Inspect `git status` and the complete staged diff.
 2. Confirm `.gitignore` excludes dependencies, build caches, environment files, logs, local archives, and editor state.
-3. Run the included audit script against the repository.
+3. Run the included audit script against generated public projects. For the skill repository, also inspect every tracked file including `assets/starter`, which that script intentionally skips. The audit is a heuristic, not proof of anonymization; inspect warnings and sensitive binary content separately.
 4. Search for home-directory paths, email addresses, private URLs, ticket identifiers, tokens, and route-specific leftovers.
 5. Inspect binary files manually; text search cannot detect sensitive pixels or embedded metadata.
 6. Confirm repository visibility and destination with the user when not already specified.
@@ -32,3 +36,5 @@ Preserve the reusable method: information architecture, data contracts, source h
 ## Publication boundary
 
 Building, previewing, or creating a ZIP does not authorize publishing. An explicit request to push or deploy authorizes that named destination, not unrelated services. Report visibility, remote URL, and commit after publication.
+
+For website work the official Sites skill controls publication/access approval. Updating and pushing this reusable skill does not authorize publishing or changing the reference travel Site. Preserve the named GitHub repository and its existing visibility; never copy its owner name into generated project defaults.
