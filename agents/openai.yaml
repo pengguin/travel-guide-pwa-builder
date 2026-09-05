@@ -1,4 +1,4 @@
 interface:
   display_name: "Travel Guide PWA Builder"
-  short_description: "Build private-aware travel PWAs with ChatGPT Sites"
-  default_prompt: "Use $travel-guide-pwa-builder to build or update a sourced, destination-themed travel PWA from my itinerary alone. Use the official Sites workflow for hosting, separate public guide content from optional personal member data, validate mobile and offline behavior, and respect publication approval."
+  short_description: "Plan and build offline travel PWAs with ChatGPT Sites"
+  default_prompt: "Use $travel-guide-pwa-builder to plan, build, or update a sourced, destination-themed travel PWA. If I only provide a rough trip idea, use planning mode with no more than five compact decision stages and a bounded feasibility check before delivering the first guide. Use the official Sites workflow for hosting, separate public content from optional personal member data, validate mobile, themes, navigation, updates, and offline behavior, and respect publication approval."

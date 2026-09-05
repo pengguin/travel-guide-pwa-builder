@@ -7,14 +7,15 @@ const source = fs.readFileSync(path.join(__dirname, '../assets/starter/service-w
 
 function fixture() {
   const listeners = {}, added = [], puts = [];
+  let skipWaitingCalls = 0;
   const cache = { addAll: async (items) => added.push(...items), match: async () => new Response('cached shell'), put: async (...args) => puts.push(args) };
   vm.runInNewContext(source, {
     URL, Response, Set,
-    self: { location: { href: 'https://example.com/guide/service-worker.js', origin: 'https://example.com' }, addEventListener: (name, cb) => { listeners[name] = cb; }, skipWaiting: async () => {}, clients: { claim: async () => {} } },
+    self: { location: { href: 'https://example.com/guide/service-worker.js', origin: 'https://example.com' }, addEventListener: (name, cb) => { listeners[name] = cb; }, skipWaiting: async () => { skipWaitingCalls += 1; }, clients: { claim: async () => {} } },
     caches: { open: async () => cache, match: async () => new Response('cached asset') },
     fetch: async () => { throw Error('network offline'); },
   });
-  return { listeners, added, puts };
+  return { listeners, added, puts, getSkipWaitingCalls: () => skipWaitingCalls };
 }
 
 test('install includes all neutral starter shell dependencies', async () => {
@@ -23,6 +24,16 @@ test('install includes all neutral starter shell dependencies', async () => {
   listeners.install({ waitUntil: (promise) => { installing = promise; } });
   await installing;
   for (const file of ['index.html', 'styles.css', 'app.js', 'trip-state.js', 'data/trip-data.js']) assert.ok(added.includes(`./${file}`));
+});
+
+test('a new worker waits until the app explicitly activates the update', async () => {
+  const { listeners, getSkipWaitingCalls } = fixture();
+  let installing;
+  listeners.install({ waitUntil: (promise) => { installing = promise; } });
+  await installing;
+  assert.equal(getSkipWaitingCalls(), 0);
+  listeners.message({ data: { type: 'ACTIVATE_UPDATE' } });
+  assert.equal(getSkipWaitingCalls(), 1);
 });
 
 test('private APIs, auth, non-GET and other origins are not intercepted', () => {

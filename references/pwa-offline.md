@@ -38,6 +38,17 @@ Cache matching must account for preview/CDN response variation. Restrict `ignore
 
 Public navigation should return a cached App Shell immediately. Update HTML and its referenced assets as one complete release; do not replace cached HTML alone while retaining incompatible JS/CSS. Keep old hashed assets while old clients need them, or prompt a controlled reload. Install must finish caching all core resources before activation. A real server/auth endpoint must not fall back to a successful HTML shell.
 
+For a code-split app, do not automatically call `skipWaiting()` in the install handler. If a newly installed worker activates while an old page is open, activation cleanup can delete the old hashed CSS/JS and produce a transient route-load failure. Use this lifecycle instead:
+
+1. fully cache the new release during install;
+2. leave it waiting while old clients remain;
+3. expose a **Check/update app version** action that detects a waiting worker and explicitly messages it to activate;
+4. reload once after `controllerchange`;
+5. delete only guide-owned old caches during activation, when the controlled reload is ready;
+6. otherwise allow normal activation after every old tab/client closes.
+
+Keep **app version update** separate from **personal data sync**. The former installs a new code/content release and reloads the app; the latter uploads/downloads authorized member records. Label both status and last-check time clearly.
+
 ## Dependency-free starter pattern
 
 The bundled starter precaches its explicit public file list, including `trip-state.js`, because it has no generated chunks. Keep launch content in `index.html`, replace it synchronously from local `trip-data.js`, and register the worker after initial render during idle time. Add every new core public image/file to that list and bump the worker release name. It deliberately does not intercept arbitrary same-origin URLs. Do not reuse this static worker unchanged for a server-backed Sites project.
@@ -59,10 +70,10 @@ Include Apple mobile-web-app metadata, a PNG touch icon, `viewport-fit=cover`, s
 
 1. Use a fresh local origin or clear only the test origin before starting.
 2. Load the production home page once; do not visit the other routes.
-3. Wait for service-worker readiness and a controlled reload.
+3. Wait for service-worker readiness. If the app exposes an update action, test the waiting-worker prompt and exactly one controlled reload.
 4. Stop the local server or enable browser offline mode.
 5. Cold-reload the app, then open itinerary, tickets, packing/tools, stay/food, emergency, and map fallback routes that were not visited online.
 6. Inspect failed requests and console errors.
-7. Restore the network/server and verify the current cache version activates without serving stale HTML or missing chunks.
+7. Restore the network/server and verify the current cache version activates without serving stale HTML or missing chunks. Keep an old lazy route open during an update and prove it does not lose its old CSS/JS before the controlled activation.
 8. Separately repeat on the deployed HTTPS domain and physical iPhone when the user requires genuine iOS acceptance.
 9. For private mode, download authorized synthetic test data online, then verify offline reading and expiry behavior. Switch users/logout and prove private records cannot reappear through a shared cache or stale request. Never copy production records into test fixtures.

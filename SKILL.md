@@ -1,20 +1,28 @@
 ---
 name: travel-guide-pwa-builder
-description: Build or update a destination-themed, mobile-first travel guide PWA from trip information alone or an existing guide. Use for Chinese route books, offline itinerary websites, travel portals, and reusable travel frameworks. Includes a local static starter, source verification, mobile navigation, public/private data separation, optional member workflows, and publishing through ChatGPT Sites using the official Sites skills. No reference sample is required. Do not use as the primary workflow for PDF-only or single-file HTML artifacts.
+description: Plan, build, or update a destination-themed, mobile-first travel guide PWA from a one-sentence trip idea, structured itinerary, or existing guide. Use for Chinese route books, offline itinerary websites, travel portals, and reusable travel frameworks. Includes a low-interaction planning mode, local static starter, focused source verification, mobile navigation, public/private data separation, optional member workflows, and publishing through ChatGPT Sites using the official Sites skills. No reference sample or completed day-by-day plan is required. Do not use as the primary workflow for PDF-only or single-file HTML artifacts.
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
 # Travel Guide PWA Builder
 
 Build a travel guide that remains useful on a phone during the trip. Preserve fixed facts, isolate dynamic claims and private records, keep the interface scannable, and distinguish tested behavior from implementation intent.
 
+## Choose the request mode
+
+1. **Planning mode:** for a rough idea such as “今年十一去某地自驾”. Read [planning-mode.md](references/planning-mode.md). Ask no more than five compact decision stages, perform a bounded feasibility check, normalize a draft itinerary, and deliver an initial guide. Do not wait for the user to write a detailed route.
+2. **Execution mode:** for a substantially fixed itinerary or booked transport. Lock supplied facts and proceed directly; ask only if a missing choice would materially change the result.
+3. **Update mode:** for an existing guide. Treat the newest explicit facts as the canonical delta, update the normalized records, rebuild the complete deployable release, and globally remove retired data.
+
+A reference sample is optional in every mode. If optional answers are missing, use safe declared defaults and continue.
+
 ## Choose the implementation path
 
 1. Inspect the workspace before editing.
 2. Reuse the user's existing guide framework when one is named or clearly established. Preserve its information architecture and interaction patterns unless the user asks for a redesign.
 3. For a hosted guide, a project containing `.openai/hosting.json`, or requested accounts/server synchronization, read [sites-workflow.md](references/sites-workflow.md). Use the currently installed official `sites-building` and `sites-hosting` skills, including their required references. Preserve existing project identity. Sites is the only built-in publishing workflow; do not add or fall back to EdgeOne or another provider.
-4. For an explicitly local/portable guide without a server, read [standalone-mode.md](references/standalone-mode.md) and run `scripts/create_project.py`. This dependency-free starter has no authentication or cloud synchronization. A reference sample is never required in either path. Do not turn its static files into a mock secure login.
+4. For an explicitly local/portable guide without a server, read [standalone-mode.md](references/standalone-mode.md) and run `scripts/create_project.py`. This dependency-free starter has no authentication or cloud synchronization. A reference sample or finalized itinerary is never required; planning mode may populate the starter after route normalization. Do not turn its static files into a mock secure login.
 5. For single-file HTML or print-first PDF requests, use the matching artifact workflow instead.
 
 ## Read only the required modules
@@ -24,6 +32,7 @@ Build a travel guide that remains useful on a phone during the trip. Preserve fi
 - Offline or startup work: [pwa-offline.md](references/pwa-offline.md).
 - New destination palette: [destination-theming.md](references/destination-theming.md).
 - Reusable skill/GitHub handoff: [privacy-and-publishing.md](references/privacy-and-publishing.md).
+- One-sentence idea, incomplete itinerary, or route planning: [planning-mode.md](references/planning-mode.md), then [research-and-risk.md](references/research-and-risk.md).
 
 When updating this skill from a real guide, extract behavior and data contracts, not the guide's source tree, database, assets, account settings, or deployment manifest.
 
@@ -36,6 +45,8 @@ Convert the request into three lists:
 - **Editorial choices:** optional sights, daily ordering, restaurant and hotel recommendations, visual theme, depth of appendix material.
 
 Never silently change an immutable fact. If supplied details conflict, call out the conflict and use the newest explicit instruction. Read [research-and-risk.md](references/research-and-risk.md) before verifying transport, entry, registration, or other time-sensitive claims.
+
+In planning mode, collect the minimum branch decisions first, then promote accepted assumptions into the same three lists. Keep the first research pass to the plan-invalidating facts defined in `planning-mode.md`; depth can grow after the user reviews the initial route.
 
 ## Build a normalized content model
 
@@ -77,6 +88,8 @@ Recommended sections:
 7. Tools: collapsed, labeled modules for checklists, budget, emergency details, preferences and calendar; show useful progress in summaries rather than a long expanded page.
 8. My (when accounts are requested): sign-in, personal tickets, packing, stays, sync and role-appropriate member management. Keep public reading available when the user requests a public guide.
 
+Place settings under My even for guests. Separate them into compact **Function settings** (updates, offline state, map provider, exports) and **Appearance settings** (font size, color mode, destination palette, visual style). Do not advertise unimplemented visual systems as selectable features.
+
 Use large type, strong hierarchy, generous spacing, restrained colors, and complete images. Put secondary detail behind expandable sections. Do not turn the main view into a dense article or thin-line table.
 
 ## Adapt the visual theme to the destination
@@ -110,6 +123,7 @@ Keep presentation components generic and itinerary content in data. Update coupl
 - Precache every core HTML/CSS/JS chunk, local image, icon, manifest, and offline fallback. If chunks are discovered only after build, generate the precache list from the final build output.
 - Account for `Vary` on verified public static assets only. Never ignore identity/cookie variation on private responses or cache authentication endpoints.
 - Version caches per release, remove only caches owned by the guide, and prove that a new release replaces stale entry HTML and chunks.
+- Do not automatically call `skipWaiting()` from `install` for a hashed, code-split app. An old open page may still request old lazy CSS/JS after the new worker deletes its cache. Let the installed worker wait until old clients close, or activate it only after an explicit version-update action; preserve the old release caches until activation is safe.
 - Hash routing or a host rewrite must support standalone `start_url`, nested-route reloads, and subpath deployments. A relative `base`, `scope`, and `start_url` must agree.
 - Online-only features such as map tiles and real-time weather must fail locally and visibly without crashing the guide.
 
@@ -122,8 +136,9 @@ Before delivery:
 3. Search globally for retired destination names, dates, stale route labels, placeholder text, private paths, and old cache keys.
 4. Preview the production build, not only the development server.
 5. Run automated content, date, permissions and release checks. When browser QA is requested/authorized, test desktop/mobile routes, expandable content, maps, navigation, reload, offline cold start and overflow. Follow official Sites browser-testing rules; otherwise report browser and physical-device checks as untested.
-6. Verify the install icon and PWA manifest on a mobile-sized viewport. For a physical iPhone requirement, repeat on the deployed HTTPS URL and state explicitly if that step remains untested.
-7. For a requested portable ZIP, package public static deploy contents at archive root. For Sites, use its current official packaging helper and contract; a server-backed Sites archive is not interchangeable with a static ZIP.
+6. Exercise every selected/unselected/disabled/focus state in both light and dark modes. Check controls over map tiles, floating controls, warnings, active filters, inputs, and navigation against semantic theme tokens rather than one-off colors.
+7. Verify the install icon and PWA manifest on a mobile-sized viewport. For a physical iPhone requirement, repeat on the deployed HTTPS URL and state explicitly if that step remains untested.
+8. For a requested portable ZIP, package public static deploy contents at archive root. For Sites, use its current official packaging helper and contract; a server-backed Sites archive is not interchangeable with a static ZIP.
 
 Read [qa-and-release.md](references/qa-and-release.md) for the complete release gate.
 

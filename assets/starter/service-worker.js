@@ -17,8 +17,10 @@ self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(PRECACHE);
     await cache.addAll(APP_SHELL);
-    await self.skipWaiting();
   })());
+});
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'ACTIVATE_UPDATE') self.skipWaiting();
 });
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {

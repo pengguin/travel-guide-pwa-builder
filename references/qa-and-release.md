@@ -30,6 +30,7 @@ Always run applicable automated checks. For Sites, perform browser UI QA only wh
 - On a fresh origin, visit only the home route, wait for service-worker installation, then stop the local server or enable browser offline mode. Reload and open several previously unvisited lazy routes. This distinguishes true precache from runtime caching of pages already visited online.
 - Include at least itinerary, tickets/transport, packing or tools, hotel/food, emergency information, and the map fallback in the offline route sample.
 - Restore the server/network, reload, and confirm the current release replaces stale entry HTML and chunks without console errors.
+- With an old release page still open on a lazy route, install a new release and navigate again before activating it. Confirm the old page does not show a missing CSS/JS chunk error. Then use the explicit version-update action or close all old clients and confirm the new worker activates cleanly.
 - If the project uses lazy CSS/JS chunks, verify offline requests hit precache even when responses carry `Vary: Origin`; test the actual preview server rather than assuming URL equality is sufficient.
 - Confirm page title, manifest name, theme color, icons, and service-worker cache version match the current guide.
 - For iOS/Add to Home Screen, check `apple-mobile-web-app-capable`, status-bar style, touch icon, safe-area viewport, `display: standalone`, `start_url`, `scope`, and standalone navigation behavior.
@@ -53,10 +54,12 @@ The following flat ZIP rules apply to portable static output. Sites publication 
 ## Mobile and member regression matrix
 
 - Clock: before departure, D1, D2, final day, completed trip, local midnight/resume, timezone and DST; preview is not presented as today.
-- Navigation: every day has matching previous/next buttons, endpoints disabled; editor returns one level; My routes gate private information only; back-to-top does not obscure inputs.
+- Navigation: every day has matching previous/next buttons, endpoints disabled; editor returns one level; My routes gate private information only; back-to-top does not obscure inputs; guide details restore the originating list item and expose the next guide.
 - Tools: summaries show live progress, all modules expand/collapse by keyboard/touch, data persists, print includes intended collapsed content, each relevant checklist has its own printable scope.
-- Form settings: all font sizes affect selectors and controls; computed input text remains at least 16px; date controls fit phone width; safe-area color/inset is consistent on every route.
+- Form settings: all font sizes affect selectors and controls; computed input text remains at least 16px; date controls fit phone width; safe-area color/inset is consistent on every route; function and appearance settings are compact, correctly labeled, and persist without login.
+- Theme matrix: light and dark modes across every primary route; selected/unselected/disabled/focus states; map legend/locate controls; floating back-to-top; danger/warning badges; inputs; bottom navigation; destination palettes. Text, icons and essential control boundaries meet the intended contrast targets.
 - Maps/guides: filters derive from real records; city/date combination updates bounds and list; zero/one-point cases work; all navigation links respect selected provider and open the actual target where supported.
+- Deep-guide order: earliest itinerary day first, explicit within-day sequence second; no guide disappears unless an actual filter excludes it.
 - Accounts: guest, owner, unrelated ChatGPT user, member A and member B; server rejects cross-user reads/writes and role changes; same-name users do not share records.
 - Repeat login, renewal, rotation, expired/revoked code, dismissible expiry reminder and login-return immediate profile update; private cache/attachments never cross sessions.
 - Member edit conflict and sync failure; ticket/stay provenance accurately distinguishes available structured data from absent attachments.
