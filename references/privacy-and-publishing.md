@@ -38,3 +38,5 @@ Distinguish four destinations: public client bundle, private authorized server d
 Building, previewing, or creating a ZIP does not authorize publishing. An explicit request to push or deploy authorizes that named destination, not unrelated services. Report visibility, remote URL, and commit after publication.
 
 For website work the official Sites skill controls publication/access approval. Updating and pushing this reusable skill does not authorize publishing or changing the reference travel Site. Preserve the named GitHub repository and its existing visibility; never copy its owner name into generated project defaults.
+
+Repository documentation may identify its own public publisher and license, but demo fixtures and screenshots must remain synthetic or independently anonymized. A public itinerary is not automatically a safe reusable example if its dates, bookings, members, equipment or private workflow can identify a traveler.

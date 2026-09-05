@@ -2,7 +2,7 @@
 name: travel-guide-pwa-builder
 description: Plan, build, or update a destination-themed, mobile-first travel guide PWA from a one-sentence trip idea, structured itinerary, or existing guide. Use for Chinese route books, offline itinerary websites, travel portals, and reusable travel frameworks. Includes a low-interaction planning mode, local static starter, focused source verification, mobile navigation, public/private data separation, optional member workflows, and publishing through ChatGPT Sites using the official Sites skills. No reference sample or completed day-by-day plan is required. Do not use as the primary workflow for PDF-only or single-file HTML artifacts.
 metadata:
-  version: "2.1.0"
+  version: "2.2.0"
 ---
 
 # Travel Guide PWA Builder
@@ -28,11 +28,13 @@ A reference sample is optional in every mode. If optional answers are missing, u
 ## Read only the required modules
 
 - Mobile layout, home state, forms, maps, navigation or tools: [mobile-experience.md](references/mobile-experience.md).
+- Field execution, deadlines, daily-page deduplication, transfers and next-day preparation: [field-execution.md](references/field-execution.md).
 - Accounts, access codes, ticket/booking uploads, personal editing or sync: [member-data.md](references/member-data.md), then the official Sites authentication and storage references.
 - Offline or startup work: [pwa-offline.md](references/pwa-offline.md).
 - New destination palette: [destination-theming.md](references/destination-theming.md).
 - Reusable skill/GitHub handoff: [privacy-and-publishing.md](references/privacy-and-publishing.md).
 - One-sentence idea, incomplete itinerary, or route planning: [planning-mode.md](references/planning-mode.md), then [research-and-risk.md](references/research-and-risk.md).
+- Local runtime, network boundaries, Sites dependency or hosting portability questions: [environment-and-deployment.md](references/environment-and-deployment.md).
 
 When updating this skill from a real guide, extract behavior and data contracts, not the guide's source tree, database, assets, account settings, or deployment manifest.
 
@@ -75,7 +77,7 @@ Use stable IDs and derive repeated labels, counts, route filters, and totals fro
 
 ## Design the information architecture
 
-Make the first screen useful within about ten seconds. For a field-use guide, prioritize the current day, current city, the three most important actions, the next transport, and the next hard deadline; keep the full route, budget, and research detail on dedicated pages. For a planning-first guide, an overview may lead instead. Follow the user's stated hierarchy rather than forcing both modes onto one crowded home screen.
+Make the first screen useful within about ten seconds. For a field-use guide, combine current stage, next action, next transport and next hard deadline into one compact status area; keep the three most important actions nearby without restating the same transfer in several cards. A hard deadline is a real time-bound departure, check-in, reservation or closure—not advice such as “rest early”. Keep the full route, budget and research detail on dedicated pages. For a planning-first guide, an overview may lead instead. Follow the user's stated hierarchy rather than forcing both modes onto one crowded home screen. Read [field-execution.md](references/field-execution.md).
 
 Recommended sections:
 
@@ -137,8 +139,9 @@ Before delivery:
 4. Preview the production build, not only the development server.
 5. Run automated content, date, permissions and release checks. When browser QA is requested/authorized, test desktop/mobile routes, expandable content, maps, navigation, reload, offline cold start and overflow. Follow official Sites browser-testing rules; otherwise report browser and physical-device checks as untested.
 6. Exercise every selected/unselected/disabled/focus state in both light and dark modes. Check controls over map tiles, floating controls, warnings, active filters, inputs, and navigation against semantic theme tokens rather than one-off colors.
-7. Verify the install icon and PWA manifest on a mobile-sized viewport. For a physical iPhone requirement, repeat on the deployed HTTPS URL and state explicitly if that step remains untested.
-8. For a requested portable ZIP, package public static deploy contents at archive root. For Sites, use its current official packaging helper and contract; a server-backed Sites archive is not interchangeable with a static ZIP.
+7. Print each supported itinerary/checklist view from its explicit user action. Printed pages must force white surfaces and black text independent of the selected screen theme; a mobile print action must not be invoked again by timers or lifecycle effects.
+8. Verify the install icon and PWA manifest on a mobile-sized viewport. For a physical iPhone requirement, repeat on the deployed HTTPS URL and state explicitly if that step remains untested.
+9. For a requested portable ZIP, package public static deploy contents at archive root. For Sites, use its current official packaging helper and contract; a server-backed Sites archive is not interchangeable with a static ZIP.
 
 Read [qa-and-release.md](references/qa-and-release.md) for the complete release gate.
 
@@ -155,4 +158,4 @@ Read [privacy-and-publishing.md](references/privacy-and-publishing.md) before cr
 
 ## Delivery contract
 
-For hosted work, return the verified Sites URL using the official handoff. For local-only work, return the runnable project/preview and portable ZIP when requested. Summarize changes, offline coverage, online-only functions, untested areas and remaining user confirmations. Push GitHub only when authorized. Do not claim end-to-end completion from a successful build alone.
+For hosted work, return the verified Sites URL using the official handoff. For local-only work, return the runnable project/preview and portable ZIP when requested. Summarize changes, offline coverage, online-only functions, untested areas and remaining user confirmations. Include a plain-language travel-information disclaimer in the guide or handoff where appropriate. Push GitHub only when authorized. Do not claim end-to-end completion from a successful build alone.

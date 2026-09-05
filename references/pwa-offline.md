@@ -49,6 +49,8 @@ For a code-split app, do not automatically call `skipWaiting()` in the install h
 
 Keep **app version update** separate from **personal data sync**. The former installs a new code/content release and reloads the app; the latter uploads/downloads authorized member records. Label both status and last-check time clearly.
 
+The settings UI should distinguish the stable display release from an internal cache/build revision when a maintenance patch must refresh installed assets without changing the public version label. Never report an installed client as current merely because the visible label matches; compare a machine-readable release manifest and verify the complete public precache before reporting readiness.
+
 ## Dependency-free starter pattern
 
 The bundled starter precaches its explicit public file list, including `trip-state.js`, because it has no generated chunks. Keep launch content in `index.html`, replace it synchronously from local `trip-data.js`, and register the worker after initial render during idle time. Add every new core public image/file to that list and bump the worker release name. It deliberately does not intercept arbitrary same-origin URLs. Do not reuse this static worker unchanged for a server-backed Sites project.

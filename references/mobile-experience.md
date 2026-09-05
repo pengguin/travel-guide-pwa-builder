@@ -31,7 +31,9 @@ Use system fonts. Font preferences small/medium/large apply through global token
 
 Derive city, date and type filters from actual records; omit categories with no content. For conflicting combined filters, show a useful empty state and clear action. City and date can occupy two compact horizontal rows.
 
-After filtering, update both features and viewport: multiple points fitBounds with padding; one point gets a bounded zoom; zero points does not fit invalid bounds. Preserve a usable offline list. Route lines indicate order only unless a real routing service supplied road geometry.
+After filtering, update both features and viewport: multiple points fitBounds with padding; one point gets a bounded zoom; zero points does not fit invalid bounds. Preserve a usable offline list. Pair day-number filters with their dates consistently across map and deep-guide pages. Route lines indicate order only unless a real routing service supplied road geometry.
+
+Keep map legends and locate controls inside the map boundary. Give the map an isolated stacking context so Leaflet/provider panes cannot cover global fixed navigation. A control may align with the bottom edge of the map even when the page navigation overlaps later in document flow; do not solve that by lifting map controls into the page-navigation layer.
 
 Order guide entries by earliest itinerary appearance, then by explicit within-day sequence; do not rely on source-file order or alphabetical order. Show the ordering rule in the UI. Preserve search/filter state and the exact guide-card scroll position when returning from detail. A detail page should provide both return-to-list and next-guide controls so the user can browse continuously.
 
@@ -42,6 +44,8 @@ Use one map-link resolver for all 'view on map' links, including deep guides and
 Separate packing and preparation, each with categories, editable custom items and its own clean print view. Use stable item IDs, local persistence for guests and member-scoped sync only when authorized. Keep named personal gear out of generic defaults.
 
 When requested, model reverse-planning tasks with a due date or offset from departure, editable deadlines, completion and reminder offset. Calendar export uses stable UIDs, proper escaping/folding, timezone-aware timed events or correct all-day dates, and explicit alarms if requested. Test import/update in the target calendar; exporting an ICS does not guarantee notifications or automatic subscription updates. Keep private calendar exports opt-in and out of public bundles.
+
+Printing must be a direct consequence of the user's click. Give itinerary, preparation checklist and packing checklist distinct print targets. In print media, explicitly set the page and every target surface/text/table cell to white and black; hiding screen elements alone is insufficient because dark theme backgrounds may still paint.
 
 ## Test boundaries
 

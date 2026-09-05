@@ -1,6 +1,6 @@
 # Sites integration
 
-Sites is the only supported publishing path in this skill. Keep local-only generation available; do not carry provider-specific deployment scripts from a previous guide into new projects.
+Sites is the only implemented hosted publishing path in this skill. Keep local-only generation available; do not carry provider-specific deployment scripts from a previous guide into new projects. For the conceptual boundary when Sites is unavailable, read `environment-and-deployment.md`; this skill does not ship another hosting/authentication solution.
 
 ## Authoritative dependency
 
