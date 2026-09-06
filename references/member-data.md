@@ -18,12 +18,15 @@ Use cryptographically random high-entropy codes; store a secure hash, not plaint
 
 Keep code-redemption expiry, member access expiry and session expiry separate. Offer configurable duration choices (for example 7/30/60/180 days) rather than a fixed maximum. Extend the existing member's lease without changing identity or copying data. Specify whether extension starts from now or the later of now/current expiry. Rotation revokes the old code but retains the member's data.
 
+When no different product rule is supplied, 30 days is a reasonable visible default for a newly created travel-access lease; it is not a security maximum. Put the create/invite action before historical management lists. On mobile, collapse current-member and credential-history sections by default when they would otherwise make the page excessively long. Do not duplicate profile editing or sync controls that already belong to the parent My page.
+
 For requested expiry reminders, persist lease start/end and compute remaining fraction from that lease, not from an assumed duration. At the final 10%, show readable expiry text plus a restrained navigation badge. Dismissal must work without renewal and be scoped by member and lease version; renewal creates a new reminder period. Show expiry on both member cards and the signed-in profile. Expired access remains a server denial even if a warning was dismissed.
 
 ## Personal editing and immediately refreshed UI
 
 - Roles should distinguish owner/admin, member-self editor and read-only viewer. Hiding UI is insufficient: whitelist editable personal fields on the server, reject role/owner/lease changes by members.
 - Members may edit their own amounts, private transport additions/overrides, stays and notes when requested. Shared route changes require separate permission; do not silently edit other travelers or the public itinerary.
+- Present saved tickets and stays as compact summaries with the same Details → inline edit → Save/Cancel pattern. New items scroll to a single draft editor and collapse after save. Keep checkbox selection hit areas independent from row-level editing actions.
 - Resolve selected shared segment IDs plus member-specific segments into one chronological ticket list. Preserve a same-number flight with different boarding point as a distinct segment. Show admin preview of the selected member's resolved list, not just the owner's checkbox list.
 - Keep one auth/profile state source. After login, await a fresh authorized profile, update shared state, invalidate ticket/stay/home selectors, and render immediately. Handle login-return/focus refresh, stale requests after logout and account switching; use cancellation or a session generation guard.
 - Use explicit guest, loading, ready, empty and failed states. Distinguish 'structured ticket information available', 'original attachment not linked' and 'data fetch failed'; never say 'not provided' just because an upload has not been imported.

@@ -34,6 +34,8 @@ Use this order unless the brief requires another:
 
 Merge a “today focus” or private reminder into the relevant timeline node when it repeats the same instruction. Do not reduce operational detail merely to shorten the page; move secondary explanations behind disclosure controls.
 
+Give each timeline node a stable ID. When a sight or guide is opened from that node, carry the day ID and node ID through the detail route and restore the exact node on return. Returning only to the top of the day is insufficient for long itineraries.
+
 ## Transport Boxes
 
 Prefer concrete local times over “morning”, “later” or “about three hours early”. Include From, To, recommended method, duration range, suggested departure, latest safe departure, target arrival, cost range and cautions. For a station-to-international-airport connection, include exit time, meal/buffer window, road-time allowance and tiered delay responses.
@@ -53,3 +55,5 @@ Ticket cards may offer copy actions for service number, terminal/station, destin
 Map overlays belong to the map's own isolated stacking context. Align legend/location controls inside the map boundary and keep the entire map below global fixed navigation. Date chips should pair day number with a readable date wherever the same filter concept appears.
 
 Each printable view owns a single print target. Invoke printing directly from the user's click. In `@media print`, hide application chrome and explicitly force the target, descendants, table cells and page canvas to white backgrounds and black text. Do not rely on inherited theme variables or temporarily print the live dark-mode page.
+
+For a shareable whole-trip image, keep every phase heading visually attached to the entries that follow it: the space above a phase is larger than the space below it. Use a predictable canvas width, dynamic height and public-safe data only. Inspect the rendered raster rather than assuming DOM spacing survives the export library.

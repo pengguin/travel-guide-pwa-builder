@@ -2,7 +2,7 @@
 name: travel-guide-pwa-builder
 description: Plan, build, or update a destination-themed, mobile-first travel guide PWA from a one-sentence trip idea, structured itinerary, or existing guide. Use for Chinese route books, offline itinerary websites, travel portals, and reusable travel frameworks. Includes a low-interaction planning mode, local static starter, focused source verification, mobile navigation, public/private data separation, optional member workflows, and publishing through ChatGPT Sites using the official Sites skills. No reference sample or completed day-by-day plan is required. Do not use as the primary workflow for PDF-only or single-file HTML artifacts.
 metadata:
-  version: "2.2.0"
+  version: "2.3.0"
 ---
 
 # Travel Guide PWA Builder
@@ -25,6 +25,8 @@ A reference sample is optional in every mode. If optional answers are missing, u
 4. For an explicitly local/portable guide without a server, read [standalone-mode.md](references/standalone-mode.md) and run `scripts/create_project.py`. This dependency-free starter has no authentication or cloud synchronization. A reference sample or finalized itinerary is never required; planning mode may populate the starter after route normalization. Do not turn its static files into a mock secure login.
 5. For single-file HTML or print-first PDF requests, use the matching artifact workflow instead.
 
+For an existing guide, the live project's normalized records, routes, styles, tests and release contract are the ground truth for that instance. The reusable skill is a method and invariant checklist, not a generator that may overwrite a newer application architecture. Read [architecture-and-maintenance.md](references/architecture-and-maintenance.md) before broad refactors or before feeding lessons from a real project back into this skill.
+
 ## Read only the required modules
 
 - Mobile layout, home state, forms, maps, navigation or tools: [mobile-experience.md](references/mobile-experience.md).
@@ -35,6 +37,7 @@ A reference sample is optional in every mode. If optional answers are missing, u
 - Reusable skill/GitHub handoff: [privacy-and-publishing.md](references/privacy-and-publishing.md).
 - One-sentence idea, incomplete itinerary, or route planning: [planning-mode.md](references/planning-mode.md), then [research-and-risk.md](references/research-and-risk.md).
 - Local runtime, network boundaries, Sites dependency or hosting portability questions: [environment-and-deployment.md](references/environment-and-deployment.md).
+- Cross-page refactors, regression prevention, release identity, or updating the skill from a completed guide: [architecture-and-maintenance.md](references/architecture-and-maintenance.md).
 
 When updating this skill from a real guide, extract behavior and data contracts, not the guide's source tree, database, assets, account settings, or deployment manifest.
 
@@ -92,6 +95,10 @@ Recommended sections:
 
 Place settings under My even for guests. Separate them into compact **Function settings** (updates, offline state, map provider, exports) and **Appearance settings** (font size, color mode, destination palette, visual style). Do not advertise unimplemented visual systems as selectable features.
 
+On long mobile sections, use a compact sticky sub-navigation for the current day or module. It must remain below the shared safe-area inset and must switch real in-page panels without accidentally navigating to Home. In landscape, reduce decorative header depth and reorganize operational content into columns; do not merely stretch portrait cards across the viewport. A right-side primary navigation is appropriate when it materially increases vertical working space.
+
+For sibling day/module switches, preserve the current reading frame; bottom previous/next may return to the sticky frame anchor but not the document top. Keep one scroll owner per transition. For editable ticket/stay collections, use compact saved summaries with an explicit Details → inline edit → Save/Cancel flow, and keep selection hit areas separate from editing actions.
+
 Use large type, strong hierarchy, generous spacing, restrained colors, and complete images. Put secondary detail behind expandable sections. Do not turn the main view into a dense article or thin-line table.
 
 ## Adapt the visual theme to the destination
@@ -108,6 +115,7 @@ When using the standalone starter, pass `--theme auto` or choose a named family 
 - Store source, creator/license status, and alt text for every externally sourced image.
 - Do not commit user screenshots, boarding passes, faces, booking references, personal cloud paths, or private images unless the user explicitly asks and understands the publication scope.
 - Use generated or license-compatible neutral artwork for app icons. Verify maskable icons at common mobile crops.
+- Documentation screenshots must show the real interaction model. The first planning screenshot begins in the Codex conversation that invokes the skill, not inside a PWA that does not exist yet. When documentation is bilingual, capture strict Chinese/English counterparts with the same layout and synthetic content.
 
 ## Budget model
 
@@ -125,6 +133,7 @@ Keep presentation components generic and itinerary content in data. Update coupl
 - Precache every core HTML/CSS/JS chunk, local image, icon, manifest, and offline fallback. If chunks are discovered only after build, generate the precache list from the final build output.
 - Account for `Vary` on verified public static assets only. Never ignore identity/cookie variation on private responses or cache authentication endpoints.
 - Version caches per release, remove only caches owned by the guide, and prove that a new release replaces stale entry HTML and chunks.
+- Make the visible offline recheck self-healing while online: refresh the current precache through the controlling worker, then verify the exact current-release cache and update the check timestamp. A matching release ID does not prove the cache is complete.
 - Do not automatically call `skipWaiting()` from `install` for a hashed, code-split app. An old open page may still request old lazy CSS/JS after the new worker deletes its cache. Let the installed worker wait until old clients close, or activate it only after an explicit version-update action; preserve the old release caches until activation is safe.
 - Hash routing or a host rewrite must support standalone `start_url`, nested-route reloads, and subpath deployments. A relative `base`, `scope`, and `start_url` must agree.
 - Online-only features such as map tiles and real-time weather must fail locally and visibly without crashing the guide.

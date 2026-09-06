@@ -23,6 +23,7 @@ Always run applicable automated checks. For Sites, perform browser UI QA only wh
 - Run the production build with a clean exit.
 - Serve the production output locally.
 - Test at least one narrow phone viewport and one desktop viewport.
+- Test portrait and landscape separately. In landscape confirm compact page gutters, intentional multi-column layout where useful, side/bottom navigation proportions, map drag/tap coordinate fidelity and no hidden control leaving an empty layout track.
 - Open every primary route and representative detail page.
 - Reload nested routes; verify routing survives static hosting.
 - Exercise expandable cards, filters, map layers, navigation, calculators, and calendar export.
@@ -54,17 +55,21 @@ The following flat ZIP rules apply to portable static output. Sites publication 
 ## Mobile and member regression matrix
 
 - Clock: before departure, D1, D2, final day, completed trip, local midnight/resume, timezone and DST; preview is not presented as today.
-- Navigation: every day has matching previous/next buttons, endpoints disabled; editor returns one level; My routes gate private information only; back-to-top does not obscure inputs; guide details restore the originating list item and expose the next guide.
+- Navigation: every day has matching previous/next buttons, endpoints disabled; editor returns one level; sticky module tabs switch the intended panel without navigating Home; My routes gate private information only; back-to-top does not obscure inputs; guide details restore the originating list item or exact itinerary node and expose the next guide.
+- Repeatedly switch sibling day/guide/profile tabs and verify the viewport neither jumps to page top nor drifts upward. Test short final panels as well as long panels. Bottom previous/next should return to the sticky day frame rather than the document top.
 - Tools: summaries show live progress, all modules expand/collapse by keyboard/touch, data persists, print includes intended collapsed content, each relevant checklist has its own printable scope.
-- Print: each print button fires once from a direct user gesture; itinerary and checklist previews are white with black text in light and dark screen modes; no live fixed navigation or dark trailing rows remain.
+- Print: each print button fires once from a direct user gesture; no helper page attempts an asynchronous automatic print; the print target remains present until `afterprint`; itinerary and checklist previews are white with black text in light and dark screen modes; no live fixed navigation, blank pages or dark trailing rows remain.
 - Form settings: all font sizes affect selectors and controls; computed input text remains at least 16px; date controls fit phone width; safe-area color/inset is consistent on every route; function and appearance settings are compact, correctly labeled, and persist without login.
 - Theme matrix: light and dark modes across every primary route; selected/unselected/disabled/focus states; map legend/locate controls; floating back-to-top; danger/warning badges; inputs; bottom navigation; destination palettes. Text, icons and essential control boundaries meet the intended contrast targets.
-- Maps/guides: filters derive from real records; city/date combination updates bounds and list; date chips include day and date consistently; zero/one-point cases work; all navigation links respect selected provider and open the actual target where supported; map panes and controls remain under the global bottom navigation.
+- Maps/guides: filters derive from real records; city/date combination updates bounds and list; date chips include day and date consistently; zero/one-point cases work; all navigation links respect selected provider and open the actual target where supported; map panes and controls remain under global navigation; manual landscape does not use CSS rotation; drag/tap coordinates remain aligned after orientation/fullscreen changes; an alternate tile provider and offline list fail independently.
 - Deep-guide order: earliest itinerary day first, explicit within-day sequence second; no guide disappears unless an actual filter excludes it.
 - Accounts: guest, owner, unrelated ChatGPT user, member A and member B; server rejects cross-user reads/writes and role changes; same-name users do not share records.
 - Repeat login, renewal, rotation, expired/revoked code, dismissible expiry reminder and login-return immediate profile update; private cache/attachments never cross sessions.
 - Member edit conflict and sync failure; ticket/stay provenance accurately distinguishes available structured data from absent attachments.
+- Member collections: saved ticket/stay cards are summaries; Details opens only that record; Add reveals one draft; Save collapses; Cancel preserves server state; checkbox and Details hit areas do not trigger each other; member-scoped shared-ticket overrides retain stable IDs.
+- Offline repair: remove one current-cache asset in DevTools, run Recheck, confirm it is fetched and the timestamp changes; repeat when the release ID is already current and when a waiting worker exists.
 - Verify public source/build/GitHub payload contains no private records, seed data, screenshots, codes or account/deployment credentials. See `privacy-and-publishing.md`.
+- Record the human version, unique build/release ID, service-worker cache name, commit and hosted version. Confirm a maintenance release is detectable even when the human version intentionally does not change, and preserve a tested rollback baseline before broad refactors.
 
 ## Evidence standard
 

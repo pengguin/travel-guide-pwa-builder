@@ -49,7 +49,11 @@ For a code-split app, do not automatically call `skipWaiting()` in the install h
 
 Keep **app version update** separate from **personal data sync**. The former installs a new code/content release and reloads the app; the latter uploads/downloads authorized member records. Label both status and last-check time clearly.
 
-The settings UI should distinguish the stable display release from an internal cache/build revision when a maintenance patch must refresh installed assets without changing the public version label. Never report an installed client as current merely because the visible label matches; compare a machine-readable release manifest and verify the complete public precache before reporting readiness.
+The settings UI should distinguish the stable display release from a unique internal build/release ID and a service-worker cache name. Every deployable asset set receives a new build ID even when a maintenance patch intentionally keeps the public version label. Never report an installed client as current merely because the visible label matches; compare a machine-readable release manifest and verify the complete public precache before reporting readiness.
+
+Treat offline verification as an active repair operation when online, not only a cache inventory. A user-triggered recheck should ask the controlling service worker to refetch the current precache through a `MessageChannel`, then verify every manifest entry inside the exact current-release static cache. Fetch the manifest with a cache-busting query that the service worker sends network-only. Update the visible verification time after every completed attempt, including incomplete results.
+
+When the server release ID equals the client release ID, still run service-worker update/activation and precache repair. “No newer release” does not prove that the current cache is complete. If a waiting worker exists, activate it under the product's explicit update policy before messaging the new controller. Report missing counts and recovery instructions rather than a false ready state.
 
 ## Dependency-free starter pattern
 

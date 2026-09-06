@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Travel Guide PWA Builder documentation captures</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #0d3440;
+      --muted: #637a7d;
+      --paper: #f7f1e6;
+      --surface: #fffdf8;
+      --nav: #073848;
+      --teal: #0c8d8a;
+      --gold: #e2a33f;
+      --line: #dccdb6;
+      --soft: #e2f2ef;
+      --danger: #a94737;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #dfe8e7; color: var(--ink); }
+    button { font: inherit; }
+    .shot { display: none; width: 100vw; height: 100vh; }
+    body[data-shot="chat"] .shot-chat,
+    body[data-shot="home"] .shot-home,
+    body[data-shot="map"] .shot-map { display: flex; }
+
+    /* Codex conversation — the actual entry point before a guide exists. */
+    .shot-chat { background: #f7f7f5; }
+    .codex-sidebar { width: 272px; padding: 28px 18px; border-right: 1px solid #deded8; background: #efefec; }
+    .codex-brand { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 700; }
+    .codex-mark { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; color: white; background: #111; }
+    .new-task { margin-top: 32px; padding: 13px 16px; border: 1px solid #d1d1cc; border-radius: 12px; background: white; font-weight: 650; }
+    .side-label { margin: 32px 12px 12px; color: #81817b; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .side-task { padding: 12px; border-radius: 10px; background: #deded9; font-size: 14px; line-height: 1.35; }
+    .codex-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .codex-top { height: 66px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; border-bottom: 1px solid #e4e4de; background: rgba(255,255,255,.82); }
+    .codex-top strong { font-size: 15px; }
+    .model-pill { padding: 8px 12px; border: 1px solid #d2d2cb; border-radius: 999px; color: #5d5d58; font-size: 13px; }
+    .conversation { width: min(900px, calc(100% - 72px)); margin: 0 auto; padding: 42px 0 126px; overflow: hidden; }
+    .user-msg { margin-left: auto; width: 76%; padding: 18px 20px; border-radius: 18px 18px 4px 18px; background: #e8e8e4; font-size: 18px; line-height: 1.55; }
+    .assistant-msg { margin-top: 30px; display: grid; grid-template-columns: 40px 1fr; gap: 16px; }
+    .assistant-icon { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; background: #111; color: #fff; font-size: 18px; }
+    .assistant-body { font-size: 17px; line-height: 1.6; }
+    .decision-card { margin-top: 16px; padding: 18px; border: 1px solid #dbdbd4; border-radius: 16px; background: white; box-shadow: 0 8px 24px rgba(25, 35, 35, .06); }
+    .decision-title { font-weight: 750; margin-bottom: 12px; }
+    .decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .choice { padding: 12px 14px; border: 1px solid #d7d7d0; border-radius: 11px; background: #fafaf8; }
+    .choice b { display: block; font-size: 14px; }
+    .choice span { color: #777770; font-size: 12px; }
+    .composer { position: absolute; left: 50%; bottom: 24px; transform: translateX(-36%); width: min(780px, 62vw); padding: 15px 18px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #d3d3cd; border-radius: 18px; background: white; box-shadow: 0 18px 50px rgba(0,0,0,.1); color: #888881; }
+    .send { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: white; background: #111; }
+
+    /* Field home — browser-rendered product UI, not an illustration-only poster. */
+    .shot-home { align-items: center; justify-content: center; gap: 70px; padding: 44px 80px; background: radial-gradient(circle at 20% 0%, #f6ead7 0, #dce8e6 44%, #c5d8d6 100%); }
+    .phone { width: 420px; height: 830px; border: 12px solid #0d1c22; border-radius: 48px; overflow: hidden; background: var(--paper); box-shadow: 0 34px 80px rgba(9,37,45,.28); position: relative; }
+    .phone-status { height: 40px; display: flex; align-items: center; justify-content: space-between; padding: 12px 24px 6px; color: white; background: var(--nav); font-size: 13px; font-weight: 700; }
+    .app-head { padding: 16px 22px 20px; color: white; background: var(--nav); }
+    .eyebrow { color: var(--gold); font-weight: 800; letter-spacing: .14em; font-size: 12px; }
+    .app-head h1 { margin: 8px 0 2px; font-size: 28px; font-weight: 620; }
+    .app-head p { margin: 0; color: #c9d9dd; font-size: 13px; }
+    .phone-body { height: 682px; overflow: hidden; padding: 18px 18px 90px; }
+    .countdown { padding: 12px 14px; border-left: 5px solid var(--gold); border-radius: 9px; color: #f5d59b; background: #174858; font-size: 15px; font-weight: 760; }
+    .status-card { margin-top: 14px; padding: 16px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+    .status-row { display: flex; align-items: center; justify-content: space-between; }
+    .day-badge { width: 54px; height: 54px; border-radius: 15px; display: grid; place-items: center; background: var(--gold); font-size: 20px; font-weight: 850; }
+    .route-copy { flex: 1; padding-left: 12px; }
+    .route-copy small { color: var(--muted); }
+    .route-copy b { display: block; margin-top: 3px; font-size: 20px; }
+    .next-label { margin-top: 16px; color: var(--muted); font-size: 12px; }
+    .next-action { margin-top: 4px; font-size: 17px; font-weight: 760; }
+    .deadline { margin-top: 12px; padding: 12px; border-left: 5px solid var(--danger); border-radius: 10px; background: #fbefeb; }
+    .deadline small { color: var(--danger); font-weight: 800; }
+    .deadline strong { display: block; margin-top: 3px; font-size: 18px; }
+    .mini-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+    .mini-action { padding: 11px 5px; text-align: center; border: 1px solid var(--line); border-radius: 11px; background: white; font-size: 12px; font-weight: 700; }
+    .timeline { margin-top: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255,255,255,.7); }
+    .timeline h2 { margin: 0 0 10px; font-size: 15px; }
+    .event { display: grid; grid-template-columns: 46px 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid #e8ded0; font-size: 12px; }
+    .event:first-of-type { border-top: 0; }
+    .event time { color: var(--teal); font-weight: 800; }
+    .bottom-nav { position: absolute; inset: auto 0 0; height: 76px; padding: 12px 13px 17px; display: grid; grid-template-columns: repeat(6,1fr); color: #bfd0d4; background: var(--nav); }
+    .nav-item { text-align: center; font-size: 10px; }
+    .nav-item i { display: block; margin: 0 auto 4px; width: 20px; height: 20px; border: 2px solid currentColor; border-radius: 6px; }
+    .nav-item.active { color: white; }
+    .story { width: min(650px, 48vw); }
+    .story-kicker { color: #176765; font-size: 14px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+    .story h2 { margin: 12px 0 18px; color: #0a3945; font-size: 48px; line-height: 1.08; letter-spacing: -.03em; }
+    .story p { margin: 0; color: #4c676b; font-size: 21px; line-height: 1.6; }
+    .story-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 28px; }
+    .story-card { padding: 17px; border: 1px solid rgba(9,64,73,.16); border-radius: 16px; background: rgba(255,255,255,.58); }
+    .story-card b { display: block; font-size: 16px; }
+    .story-card span { display: block; margin-top: 6px; color: #647a7c; font-size: 13px; line-height: 1.45; }
+
+    /* Landscape map and operation list. */
+    .shot-map { background: var(--paper); }
+    .side-nav { width: 118px; padding: 28px 14px; display: grid; align-content: center; gap: 22px; color: #bbd0d4; background: var(--nav); }
+    .side-nav .nav-item { font-size: 12px; padding: 8px 0; border-radius: 12px; }
+    .side-nav .nav-item.active { color: white; background: rgba(255,255,255,.1); }
+    .map-main { flex: 1; padding: 26px 34px 30px; min-width: 0; }
+    .map-title { display: flex; align-items: end; justify-content: space-between; }
+    .map-title .eyebrow { color: #bd7720; }
+    .map-title h1 { margin: 5px 0 0; font-size: 34px; }
+    .map-title p { margin: 0; color: var(--muted); }
+    .filters { display: flex; gap: 10px; margin: 22px 0 18px; overflow: hidden; }
+    .filter { flex: 0 0 auto; padding: 10px 16px; border: 1px solid #cbb99d; border-radius: 999px; background: var(--surface); font-size: 13px; }
+    .filter.active { border-color: var(--nav); color: white; background: var(--nav); }
+    .map-workspace { height: calc(100vh - 166px); display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(360px, .8fr); gap: 18px; }
+    .map-frame { position: relative; isolation: isolate; overflow: hidden; border: 1px solid #bba98c; border-radius: 18px; background: #aad5de; }
+    .landmass { position: absolute; inset: 0; background: linear-gradient(14deg, transparent 0 37%, #eef0e6 37% 73%, transparent 73%), linear-gradient(164deg, #dbe6d0 0 25%, transparent 25% 62%, #e8e3cb 62%); opacity: .95; }
+    .road { position: absolute; height: 5px; transform-origin: left center; border-radius: 8px; background: var(--gold); box-shadow: 0 0 0 2px rgba(255,255,255,.65); }
+    .r1 { left: 18%; top: 62%; width: 46%; transform: rotate(-13deg); }
+    .r2 { left: 55%; top: 52%; width: 30%; transform: rotate(16deg); }
+    .route-dash { position: absolute; left: 15%; top: 47%; width: 72%; height: 120px; border-top: 5px dashed #bc563c; border-radius: 50%; transform: rotate(4deg); }
+    .pin { position: absolute; width: 38px; height: 38px; display: grid; place-items: center; border: 3px solid white; border-radius: 50% 50% 50% 9px; transform: rotate(-45deg); color: white; background: var(--teal); box-shadow: 0 6px 16px rgba(5,45,55,.26); font-size: 12px; font-weight: 800; }
+    .pin span { transform: rotate(45deg); }
+    .p1 { left: 19%; top: 56%; } .p2 { left: 38%; top: 43%; } .p3 { left: 61%; top: 52%; } .p4 { left: 80%; top: 68%; }
+    .map-controls { position: absolute; left: 18px; right: 18px; bottom: 16px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; z-index: 10; pointer-events: none; }
+    .control { min-height: 42px; padding: 10px 14px; border: 1px solid #b9b1a3; border-radius: 12px; background: rgba(255,255,255,.94); box-shadow: 0 6px 18px rgba(0,0,0,.12); font-size: 12px; font-weight: 750; pointer-events: auto; }
+    .legend { justify-self: center; display: flex; gap: 16px; }
+    .legend b::before { content: ""; display: inline-block; width: 18px; height: 4px; margin-right: 6px; vertical-align: middle; border-radius: 4px; background: var(--gold); }
+    .legend b:last-child::before { background: #bc563c; }
+    .place-list { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+    .list-head { padding: 18px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--line); background: white; }
+    .list-head strong { font-size: 18px; }
+    .list-body { overflow: hidden; padding: 0 18px; }
+    .place { padding: 16px 0; border-bottom: 1px solid #e6dccd; }
+    .place-title { display: flex; gap: 12px; align-items: start; }
+    .place-num { color: var(--gold); font-weight: 850; }
+    .place b { display: block; }
+    .place small { color: var(--muted); }
+    .place-actions { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 12px 0 0 28px; }
+    .place-actions span { padding: 8px 6px; border: 1px solid #c7dbd9; border-radius: 8px; color: #087a77; text-align: center; font-size: 11px; font-weight: 800; }
+  </style>
+</head>
+<body>
+  <section class="shot shot-chat">
+    <aside class="codex-sidebar">
+      <div class="codex-brand"><span class="codex-mark">C</span><span>Codex</span></div>
+      <div class="new-task" data-i18n="newTask"></div>
+      <div class="side-label" data-i18n="recent"></div>
+      <div class="side-task" data-i18n="taskTitle"></div>
+    </aside>
+    <main class="codex-main">
+      <header class="codex-top"><strong data-i18n="taskTitle"></strong><span class="model-pill">Travel Guide PWA Builder</span></header>
+      <div class="conversation">
+        <div class="user-msg" data-i18n="prompt"></div>
+        <div class="assistant-msg">
+          <span class="assistant-icon">C</span>
+          <div class="assistant-body">
+            <div data-i18n="reply"></div>
+            <div class="decision-card">
+              <div class="decision-title" data-i18n="decisionTitle"></div>
+              <div class="decision-grid">
+                <div class="choice"><b data-i18n="choice1"></b><span data-i18n="choice1d"></span></div>
+                <div class="choice"><b data-i18n="choice2"></b><span data-i18n="choice2d"></span></div>
+                <div class="choice"><b data-i18n="choice3"></b><span data-i18n="choice3d"></span></div>
+                <div class="choice"><b data-i18n="choice4"></b><span data-i18n="choice4d"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="composer"><span data-i18n="composer"></span><span class="send">↑</span></div>
+    </main>
+  </section>
+
+  <section class="shot shot-home">
+    <div class="phone">
+      <div class="phone-status"><span>09:41</span><span>● ● ▰</span></div>
+      <header class="app-head"><span class="eyebrow">FIELD GUIDE</span><h1 data-i18n="trip"></h1><p data-i18n="tripSub"></p></header>
+      <div class="phone-body">
+        <div class="countdown" data-i18n="countdown"></div>
+        <article class="status-card">
+          <div class="status-row"><span class="day-badge">D3</span><div class="route-copy"><small data-i18n="today"></small><b data-i18n="route"></b></div></div>
+          <div class="next-label" data-i18n="next"></div><div class="next-action" data-i18n="nextAction"></div>
+          <div class="deadline"><small>HARD DEADLINE</small><strong data-i18n="deadline"></strong></div>
+          <div class="mini-actions"><div class="mini-action" data-i18n="ticket"></div><div class="mini-action" data-i18n="map"></div><div class="mini-action">PLAN B</div></div>
+        </article>
+        <section class="timeline"><h2 data-i18n="timeline"></h2><div class="event"><time>09:00</time><span data-i18n="event1"></span></div><div class="event"><time>12:10</time><span data-i18n="event2"></span></div><div class="event"><time>17:20</time><span data-i18n="event3"></span></div></section>
+      </div>
+      <nav class="bottom-nav"><span class="nav-item active"><i></i><span data-i18n="home"></span></span><span class="nav-item"><i></i><span data-i18n="itinerary"></span></span><span class="nav-item"><i></i><span data-i18n="map"></span></span><span class="nav-item"><i></i><span data-i18n="guide"></span></span><span class="nav-item"><i></i><span data-i18n="tools"></span></span><span class="nav-item"><i></i><span data-i18n="my"></span></span></nav>
+    </div>
+    <div class="story"><div class="story-kicker" data-i18n="storyKicker"></div><h2 data-i18n="storyTitle"></h2><p data-i18n="storyBody"></p><div class="story-grid"><div class="story-card"><b data-i18n="story1"></b><span data-i18n="story1d"></span></div><div class="story-card"><b data-i18n="story2"></b><span data-i18n="story2d"></span></div><div class="story-card"><b data-i18n="story3"></b><span data-i18n="story3d"></span></div><div class="story-card"><b data-i18n="story4"></b><span data-i18n="story4d"></span></div></div></div>
+  </section>
+
+  <section class="shot shot-map">
+    <main class="map-main">
+      <header class="map-title"><div><span class="eyebrow">INTERACTIVE MAP</span><h1 data-i18n="mapTitle"></h1></div><p data-i18n="mapSub"></p></header>
+      <div class="filters"><span class="filter active" data-i18n="wholeTrip"></span><span class="filter">D1 · 10/01</span><span class="filter">D2 · 10/02</span><span class="filter">D3 · 10/03</span><span class="filter" data-i18n="coast"></span><span class="filter" data-i18n="mountain"></span></div>
+      <div class="map-workspace">
+        <div class="map-frame"><div class="landmass"></div><div class="road r1"></div><div class="road r2"></div><div class="route-dash"></div><div class="pin p1"><span>1</span></div><div class="pin p2"><span>4</span></div><div class="pin p3"><span>8</span></div><div class="pin p4"><span>12</span></div><div class="map-controls"><div class="control" data-i18n="exitLandscape"></div><div class="control legend"><b data-i18n="roadRail"></b><b data-i18n="flight"></b></div><div class="control" data-i18n="locate"></div></div></div>
+        <aside class="place-list"><div class="list-head"><strong data-i18n="pointList"></strong><span data-i18n="count"></span></div><div class="list-body"><article class="place"><div class="place-title"><span class="place-num">1</span><div><b data-i18n="place1"></b><small>D1 · 10/01 · 09:20</small></div></div><div class="place-actions"><span data-i18n="focus"></span><span data-i18n="dayTrip"></span><span data-i18n="navigate"></span></div></article><article class="place"><div class="place-title"><span class="place-num">4</span><div><b data-i18n="place2"></b><small>D3 · 10/03 · 11:40</small></div></div><div class="place-actions"><span data-i18n="focus"></span><span data-i18n="deepGuide"></span><span data-i18n="navigate"></span></div></article><article class="place"><div class="place-title"><span class="place-num">8</span><div><b data-i18n="place3"></b><small>D5 · 10/05 · 08:00</small></div></div><div class="place-actions"><span data-i18n="focus"></span><span data-i18n="dayTrip"></span><span data-i18n="navigate"></span></div></article></div></aside>
+      </div>
+    </main>
+    <nav class="side-nav"><span class="nav-item"><i></i><span data-i18n="home"></span></span><span class="nav-item"><i></i><span data-i18n="itinerary"></span></span><span class="nav-item active"><i></i><span data-i18n="map"></span></span><span class="nav-item"><i></i><span data-i18n="guide"></span></span><span class="nav-item"><i></i><span data-i18n="tools"></span></span><span class="nav-item"><i></i><span data-i18n="my"></span></span></nav>
+  </section>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const lang = params.get('lang') === 'en' ? 'en' : 'zh';
+    document.body.dataset.shot = params.get('shot') || 'chat';
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    const copy = {
+      zh: {
+        newTask:'新建任务', recent:'最近', taskTitle:'规划十一山海环线', prompt:'使用 $travel-guide-pwa-builder：我计划今年十一自驾 7 天，想看海岸、古镇和一段轻徒步。请帮我规划，并制作可以离线使用的手机路书。', reply:'我会先锁定会改变路线的关键选择，最多用 5 个决策阶段。你已经给出了时间、时长、交通方式和核心偏好，现在只需要确认下面 4 项。', decisionTitle:'第 1 轮 · 路线分枝', choice1:'节奏', choice1d:'均衡，每天 1 个主目标', choice2:'住宿', choice2d:'舒适型，减少换酒店', choice3:'徒步强度', choice3d:'2–4 小时，无技术路段', choice4:'交付与隐私', choice4d:'Sites 公开路书，不启用个人资料', composer:'补充约束或直接采用推荐项…',
+        trip:'2030 山海环线', tripSub:'7 天 · 可离线现场执行', countdown:'距出发还有 12 天', today:'10月3日 周四', route:'海港市 → 山谷镇', next:'下一步', nextAction:'12:10 前结束午餐，前往东站', deadline:'13:05 最晚进入检票区', ticket:'票务', map:'地图', timeline:'今日执行主线', event1:'退房后寄存行李，步行游览旧港', event2:'取行李并前往东站', event3:'抵达山谷镇，入住后只安排晚餐', home:'首页', itinerary:'行程', guide:'指南', tools:'工具', my:'我的', storyKicker:'FIELD-FIRST DELIVERY', storyTitle:'10 秒内回答现场最重要的四个问题', storyBody:'路书优先呈现当前阶段、下一步、硬时限和失败分枝。百科内容退居二线，离线核心页面不依赖地图或实时服务才能打开。', story1:'动态首页', story1d:'按日期切换当前日，并明确区分预览与今天。', story2:'具体转场', story2d:'站点、时刻、缓冲、交通方式与备选路径。', story3:'受控更新', story3d:'显式检查完整应用版本，不把代码更新与私人同步混为一谈。', story4:'隐私分层', story4d:'公开路书与授权后的个人票据、住宿和成员记录隔离。',
+        mapTitle:'互动地图', mapSub:'地图与点位清单在横屏下并排工作', wholeTrip:'全程', coast:'海岸段', mountain:'山地区', exitLandscape:'退出横屏', roadRail:'公路 / 铁路', flight:'航班', locate:'定位我', pointList:'点位清单', count:'共 12 项', place1:'抵达海港中央站', place2:'白塔观景台', place3:'山谷游客中心', focus:'定位', dayTrip:'当日行程', navigate:'导航', deepGuide:'深导'
+      },
+      en: {
+        newTask:'New task', recent:'Recent', taskTitle:'Plan an autumn coast-and-mountains loop', prompt:'Use $travel-guide-pwa-builder. I am planning a seven-day self-drive trip in early October with a coast, historic towns, and one easy hike. Plan it and build a mobile guide that works offline.', reply:'I will first lock the choices that can change the route, using no more than five decision stages. You already supplied the dates, duration, transport, and anchor experiences, so only these four choices remain.', decisionTitle:'Stage 1 · Route branches', choice1:'Pace', choice1d:'Balanced, one anchor per day', choice2:'Stays', choice2d:'Comfortable, fewer hotel changes', choice3:'Hike level', choice3d:'2–4 hours, non-technical', choice4:'Delivery & privacy', choice4d:'Public Sites guide, no personal mode', composer:'Add a constraint or accept the recommended choices…',
+        trip:'2030 Coast & Mountains Loop', tripSub:'7 days · field-ready offline guide', countdown:'12 days until departure', today:'Thu, October 3', route:'Harbor City → Valley Town', next:'Next action', nextAction:'Finish lunch by 12:10 and leave for East Station', deadline:'13:05 latest entry to the boarding area', ticket:'Tickets', map:'Map', timeline:'Today’s execution line', event1:'Check out, store luggage, walk through the old port', event2:'Collect luggage and leave for East Station', event3:'Arrive in Valley Town; check in and keep the evening light', home:'Home', itinerary:'Itinerary', guide:'Guides', tools:'Tools', my:'My', storyKicker:'FIELD-FIRST DELIVERY', storyTitle:'Answer the four critical field questions in ten seconds', storyBody:'The guide leads with current stage, next action, hard deadline, and failure branch. Encyclopedia content is secondary, and core offline pages do not depend on maps or live services to open.', story1:'Dynamic home', story1d:'Switches to the correct day and separates previews from today.', story2:'Concrete transfers', story2d:'Exact station, time, buffer, transport, and fallback path.', story3:'Controlled updates', story3d:'Checks the complete app release without confusing code updates and personal sync.', story4:'Privacy layers', story4d:'Separates the public guide from authorized tickets, stays, and member records.',
+        mapTitle:'Interactive map', mapSub:'Map and place list work side by side in landscape', wholeTrip:'Whole trip', coast:'Coast phase', mountain:'Mountain phase', exitLandscape:'Exit landscape', roadRail:'Road / rail', flight:'Flight', locate:'Locate me', pointList:'Place list', count:'12 places', place1:'Arrive at Harbor Central', place2:'White Tower viewpoint', place3:'Valley visitor center', focus:'Focus', dayTrip:'Day plan', navigate:'Navigate', deepGuide:'Guide'
+      }
+    };
+    document.querySelectorAll('[data-i18n]').forEach((node) => { node.textContent = copy[lang][node.dataset.i18n] || node.dataset.i18n; });
+  </script>
+</body>
+</html>

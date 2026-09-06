@@ -40,3 +40,7 @@ Building, previewing, or creating a ZIP does not authorize publishing. An explic
 For website work the official Sites skill controls publication/access approval. Updating and pushing this reusable skill does not authorize publishing or changing the reference travel Site. Preserve the named GitHub repository and its existing visibility; never copy its owner name into generated project defaults.
 
 Repository documentation may identify its own public publisher and license, but demo fixtures and screenshots must remain synthetic or independently anonymized. A public itinerary is not automatically a safe reusable example if its dates, bookings, members, equipment or private workflow can identify a traveler.
+
+For bilingual documentation, keep each language structurally complete rather than alternating sentence by sentence. In a combined README, place the full primary-language document first and the full secondary-language document afterward. Provide language-specific disclaimer pages and, when useful, an explanatory translation of the license while retaining the canonical license text.
+
+Documentation screenshots must be raster captures of a browser-rendered neutral demo, not low-detail vector posters. Chinese and English screenshots must use the same viewport, layout, fictional itinerary and interaction state. The planning screenshot starts in the Codex conversation where the skill is invoked; it must not imply that a user enters the initial prompt inside a PWA that has not yet been created.

@@ -27,6 +27,8 @@ For transport, verify the local date of arrival, airport and terminal, same-tick
 
 For accommodation, distinguish a legal registration obligation from a property's operational practice. Do not promise that a host, hotel, airline, or transit program will provide a benefit without a current source.
 
+For emergency contacts, include only numbers relevant to the itinerary and user context: local police/ambulance/fire where applicable, the responsible embassy or consulate, travel insurer, carrier, mobile operator roaming support, and card-issuer overseas hotlines. Prefer official pages, store the verification date, render phone links with international dialing form, and mark weak or unavailable sources for recheck. Do not copy a broad unverified phone directory into the public bundle. Personal policy or card numbers remain private.
+
 ## UI treatment
 
 Keep the main itinerary readable. Put source links, alternative services, fare observations, and legal detail in expandable sections. Place a visible `需临出发前再次确认` badge beside dynamic facts, and include a final booking checklist with an owner and deadline.

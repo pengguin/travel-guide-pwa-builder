@@ -18,6 +18,8 @@ Keep the field-use home to today's city, three actions, next transfer and next h
 - Editor back links go to the actual parent route with validated same-origin return targets. Preserve filters/scroll or the selected member. Avoid a universal 'Back to Tools' on every depth.
 - Provide a labeled back-to-top control on long pages, clear of the bottom bar and safe area; hide during text entry and near the top. Respect reduced motion.
 - Tools uses a small set of collapsed native details or accessible accordions. Summaries show title, one-line purpose and current progress; details preserve state. Printing must include intended collapsed content without printing duplicate hidden copies.
+- Treat day selectors and multi-panel section selectors as compact sticky sub-navigation in portrait. Keep them below the shared safe-area offset. The selected control must correspond to the actually rendered panel; test direct entry, refresh and all tab transitions so a nested control cannot fall through to Home.
+- In landscape, remove excessive decorative top/side whitespace and recompose operational content. A side primary navigation and two-column panels are often more usable than a stretched portrait stack, but keep reading-heavy text at a reasonable line length.
 
 ## Consistent typography and safe areas
 
@@ -35,6 +37,16 @@ After filtering, update both features and viewport: multiple points fitBounds wi
 
 Keep map legends and locate controls inside the map boundary. Give the map an isolated stacking context so Leaflet/provider panes cannot cover global fixed navigation. A control may align with the bottom edge of the map even when the page navigation overlaps later in document flow; do not solve that by lifting map controls into the page-navigation layer.
 
+Put orientation, legend and locate actions in one map-owned control row with matching height, typography, surface and focus treatment. In portrait, keep a deliberate fixed map height rather than stretching the map to match the entire list. In landscape, map and scrollable list may share an equal-height workspace. Point-list actions should use stable positions such as locate, day, navigate and optional guide; preserve an inert fourth slot when consistency is more valuable than stretching three actions.
+
+Never use a CSS rotation transform on a live map to implement manual landscape. It rotates pixels without rotating the map library's pointer coordinate system, so dragging and tapping become non-linear. Prefer Fullscreen and Screen Orientation APIs where supported; otherwise use a focus layout without claiming physical rotation. Invalidate the map size after the new layout has settled and after orientation/fullscreen changes.
+
+Run fullscreen and orientation-lock attempts independently: one rejected API must not skip the other. On iOS or another platform that cannot override the system orientation lock, label the fallback as a focus/fullscreen map and explain that physical rotation still requires the device setting.
+
+Sticky day or section tabs should switch content inside the existing reading frame. Distinguish three navigation intents in route state: a new top-level route goes to top, a sibling tab/day preserves the viewport, and bottom previous/next returns to the sticky frame anchor. Never combine a global scroll reset with a component-level `scrollIntoView` for the same transition; repeated switching will drift.
+
+Treat map tiles as a replaceable online provider. Keep provider attribution, offer a second provider where appropriate, and preserve the normalized point list when tiles fail. Do not claim that a globally sourced map is uniformly reachable in every region or that tiles are offline unless that exact cache is licensed, bounded and tested.
+
 Order guide entries by earliest itinerary appearance, then by explicit within-day sequence; do not rely on source-file order or alphabetical order. Show the ordering rule in the UI. Preserve search/filter state and the exact guide-card scroll position when returning from detail. A detail page should provide both return-to-list and next-guide controls so the user can browse continuously.
 
 Use one map-link resolver for all 'view on map' links, including deep guides and booked stays. Apply the user's chosen provider and validated latitude/longitude order. Consult current official provider link documentation and test a real destination. Opening 2GIS or another app alone does not prove that a pin/navigation target was passed. Prefer documented web/universal links with fallback; expose copy address/coordinates when app links or regional coverage fail. Do not claim offline turn-by-turn navigation from cached website content.
@@ -46,6 +58,8 @@ Separate packing and preparation, each with categories, editable custom items an
 When requested, model reverse-planning tasks with a due date or offset from departure, editable deadlines, completion and reminder offset. Calendar export uses stable UIDs, proper escaping/folding, timezone-aware timed events or correct all-day dates, and explicit alarms if requested. Test import/update in the target calendar; exporting an ICS does not guarantee notifications or automatic subscription updates. Keep private calendar exports opt-in and out of public bundles.
 
 Printing must be a direct consequence of the user's click. Give itinerary, preparation checklist and packing checklist distinct print targets. In print media, explicitly set the page and every target surface/text/table cell to white and black; hiding screen elements alone is insufficient because dark theme backgrounds may still paint.
+
+Prefer same-page printing on iOS: synchronously set the print target, call `window.print()` in the click handler, and clear the target on `afterprint`. Do not open a new page and automatically print it, and do not remove the print target on a short timeout; either can break the user-gesture chain or leave iOS with a blank preview.
 
 ## Test boundaries
 

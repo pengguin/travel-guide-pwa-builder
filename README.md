@@ -1,77 +1,93 @@
-# Travel Guide PWA Builder / 旅行路书 PWA 构建技能
+# 旅行路书 PWA 构建技能
 
-把一句旅行想法、已确认行程或现有路书，转成适合手机现场使用、可离线阅读、可按目的地换肤的旅行 PWA。支持低交互规划、固定行程执行、已有网站增量更新，以及通过 ChatGPT Sites 发布。
+当前版本：**2.3.0**
 
-Turn a one-line trip idea, a booked itinerary, or an existing guide into a destination-themed, mobile-first travel PWA designed for real field use. It supports low-interaction planning, fixed-itinerary execution, full-release updates, offline public reading, and ChatGPT Sites publishing.
+把一句旅行想法、已经确认的行程，或一套正在使用的路书，转成适合手机现场执行、可离线阅读、能够持续更新的旅行 PWA。技能支持低交互规划、固定行程落地、既有站点迭代，以及通过 ChatGPT Sites 发布。
 
-> 当前版本 / Current version: **2.2.0**
+独立中文版见 [README.zh-CN.md](README.zh-CN.md)。英文说明完整置于本文后半部分。
 
-![脱敏中文 Demo：规划输入、现场首页与逐日执行页](docs/images/demo-journey.svg)
+## 从一句话开始
 
-上图为合成、脱敏的中文 Demo，不含真实旅行者、航班、票据、访问码或部署信息。The image above is a synthetic, anonymized Chinese demo; it contains no real traveler, booking, access-code, or deployment data.
+旅行者不需要先拥有路书界面，也不需要自己填写完整逐日计划。入口是 Codex 对话，例如：
 
-## 适用场景 / Use cases
+> 使用 `$travel-guide-pwa-builder`：我计划今年十一自驾 7 天，想看海岸、古镇和一段轻徒步。请帮我规划，并制作可以离线使用的手机路书。
 
-| 模式 | 你可以怎么说 | Skill 做什么 |
+![在 Codex 对话中调用技能并完成最小化规划输入](docs/images/chat-zh.png)
+
+规划模式最多进行五个紧凑的决策阶段；已经回答的内容自动跳过。技能先核查可能推翻路线的关键事实，再交付可用初版，不会在生成路书之前要求用户写出完整日程。
+
+## 三种工作模式
+
+| 模式 | 典型输入 | 处理方式 |
 |---|---|---|
-| 规划 Planning | “今年十一去青甘环线自驾，帮我规划并做成路书。” | 不超过 5 个紧凑决策阶段，先核查会否推翻路线的关键事实，再交付可用初版。 |
-| 执行 Execution | “机票和日期已定，按这些信息制作离线路书。” | 锁定已出票/已确认事实，补齐每天时间线、Transport Box、Hard Deadline 与 Plan B。 |
-| 更新 Update | “酒店换了，10 月 3 日行程延后。” | 把新信息作为规范化数据的增量变更，但重新构建完整发布包并全局清理旧口径。 |
+| 规划模式 | “十一去青甘大环线自驾，帮我规划。” | 在不超过五个决策阶段内确定关键分枝，进行有限联网核查，生成结构化路线与初版路书。 |
+| 执行模式 | “日期、机票和酒店已经确认，按这些材料制作路书。” | 锁定用户提供的硬事实，补齐每天的时间线、具体转场、硬时限和备用方案。 |
+| 更新模式 | “酒店换了，第三天延后两小时。” | 将新信息写入规范化数据，清理全站旧口径，重新构建并发布完整版本。 |
 
-| Mode | Example input | What the skill does |
-|---|---|---|
-| Planning | “Plan a seven-day autumn road trip and make a guide.” | Uses at most five compact decision stages, verifies only plan-invalidating facts, then delivers a usable first draft. |
-| Execution | “These flights and dates are fixed. Build the offline guide.” | Locks confirmed facts and adds timelines, executable transfers, hard deadlines, and failure branches. |
-| Update | “The hotel changed and day 4 starts later.” | Applies the canonical delta, then rebuilds the complete release and removes retired data globally. |
+“增量修改”描述的是数据与代码的变更范围；最终 PWA 仍作为一个完整、相互兼容的发布包构建，避免新旧页面、样式和离线缓存混用。
 
-无需提供参考样例，也无需先写完逐日行程。A reference design and completed day-by-day plan are optional.
+## 规划模式的最小交互
 
-## 交互输入 / Interaction input
+技能只询问真正会改变路线的分枝，并把相关问题合并：
 
-规划模式最多覆盖以下五个决策阶段；已知内容会自动跳过：
-
-1. 时间、时长、出发地、人数与交通约束；
-2. 必去/不去、旅行节奏；
-3. 预算、住宿与长途转场容忍度；
+1. 时间、时长、出发地、人数和自驾或公共交通约束；
+2. 必去、不去和旅行节奏；
+3. 预算、住宿标准和对长途转场的容忍度；
 4. 行动能力、气候、证件、饮食或健康约束；
-5. 本地交付或 Sites，以及是否开启个性化成员模式。
+5. 本地交付或 ChatGPT Sites，以及是否启用需要登录的个性化模式。
 
-Planning mode covers at most five decision stages: trip frame, priorities, cost/comfort, operational constraints, and delivery/privacy. Known answers are skipped and safe defaults remain visible instead of blocking the first draft.
+安全默认值会明确写入初版，用户可以之后再调整。首次联网核查通常只覆盖入境或自驾限制、季节关闭、最长转场、住宿基地之间的现实耗时和少量预算锚点。
 
-## 交付物 / Deliverables
+## 现场优先的交付物
 
-- 手机优先的首页：当前阶段、下一步、下一段交通、真正的 Hard Deadline；
-- 完整逐日时间线、具体 Transport Box、复杂转场分档 Plan B；
-- 行程顺序地图、按城市/日期筛选、离线地点列表；
-- 路线相关住宿区域、餐饮、装备、风险、预算与复核清单；
-- PWA App Shell、离线缓存、安装图标、显式整包更新；
-- 白底黑字的简化行程与分类 Checklist 打印；
-- 可选的 Sites 公开阅读 + 私人票务/住宿/行李/成员同步；
-- 脱敏审计、构建与发布检查、CHANGELOG 和剩余人工确认项。
+- 动态首页：当前阶段、下一步、下一段交通和真正的硬时限；
+- 逐日执行页：时间线、具体转场、折叠详情、天气或延误备用方案；
+- 互动地图：按城市和日期筛选、路线顺序、点位清单和横屏操作；
+- 行程指南：景点、交通、食宿等内嵌栏目和精确返回位置；
+- 工具与设置：清单、预算、应急联系、地图来源、离线与整包更新；
+- 白底黑字的简化行程、准备清单和行李清单打印；
+- 可选的公开路书与私人票务、住宿、装备、成员资料分层；
+- 构建、隐私、离线、移动端和发布检查，以及剩余人工确认项。
 
-Deliverables include a field-status home, day timelines, concrete transfer boxes, tiered Plan B logic, route-aware maps and filters, practical planning data, PWA/offline/update behavior, clean print views, optional Sites-backed member data, privacy audits, and a concise release handoff.
+![现场首页把下一步、硬时限与失败分枝放在首屏](docs/images/home-zh.png)
 
-## 使用技巧 / Usage tips
+## 信息架构与使用技巧
 
-- 把“已出票/不可改”与“候选/可调整”明确区分；Skill 不会静默改动硬事实。
-- 票据截图只证明该条已订交通；未来时刻、签证、价格、天气仍需官方来源复核。
-- 现场信息遵循 `Deadline → Transition → Failure mode`；百科内容默认折叠或省略。
-- 个性化模式必须先决定公开/私人边界。姓名相同不是同一成员，显示名不能用于授权。
-- “应用更新”更新整套页面和离线资源；“同步数据”只处理当前成员的授权记录。
-- 地图、天气、实时票价和外部导航需要网络；核心公共路书不应依赖这些模块启动。
+- 明确区分“已出票或不可改”“规划假设”“动态待复核”；技能不会静默改动硬事实。
+- 现场页面遵循“硬时限 → 转场 → 失败分枝”，不会继续堆叠百科型内容。
+- 日期状态按日历日期计算；预览日不能冒充今天，跨时区航班时刻仍使用当地票面时间。
+- 从列表进入详情后，返回时恢复筛选条件和原条目位置；行程中的景点入口返回具体时间节点。
+- 地图标记和清单来自同一组稳定数据；横屏时地图与清单并排，竖屏保持适合手持操作的高度。
+- 主动横屏优先调用浏览器全屏与屏幕方向能力；不使用 CSS 旋转地图画布，因为那会破坏触控坐标。
+- “更新应用”更新页面、代码和离线资源；“同步数据”只处理当前授权成员的私人记录。
+- 公开可分享的截图和导出图不包含姓名、订单号、价格、票据或私人备注。
 
-Tips: identify immutable bookings, keep dynamic facts sourced and dated, prioritize deadline/transfer/failure handling, treat identity as server authorization rather than a display name, and never conflate an application release with personal-data synchronization.
+![横屏地图、点位清单与等高控件共同形成现场工作区](docs/images/map-zh.png)
 
-## 安装 / Install
+## 本机开发环境与网络依赖
+
+- Python 3.10 或更高版本：运行项目初始化、静态审计和测试；
+- 现代浏览器：验证 Service Worker、离线、打印、横竖屏和 PWA 行为；
+- Git：仅仓库与发布工作流需要；
+- 已托管项目：遵循现有 `package.json`、锁文件、`.openai/hosting.json` 和当前官方 Sites 技能，不在本技能中固定框架或运行时版本；
+- 网络：官方事实核查、依赖安装、在线地图、实时天气与票价、外部导航、Sites 登录与发布、首次私人数据下载或同步需要网络。
+
+本地静态起步项目可以离线生成和测试。核心公共路书在成功安装后应可离线阅读；地图瓦片、实时信息、外部导航和首次私人登录不属于离线保证。
+
+### 没有 ChatGPT Sites 时
+
+本技能仍可交付本地或便携的公开静态 PWA。概念上的替代架构需要静态托管、HTTPS、服务端函数、身份系统、持久数据库或对象存储，并重新设计缓存、权限、迁移和发布流程。**本技能目前不提供、实现或推荐具体的替代托管方案。**
+
+## 安装与调用
 
 ```bash
 git clone https://github.com/pengguin/travel-guide-pwa-builder.git \
   ~/.codex/skills/travel-guide-pwa-builder
 ```
 
-随后直接描述需求，或显式调用 `$travel-guide-pwa-builder`。Then describe the trip or invoke `$travel-guide-pwa-builder` explicitly.
+安装后直接描述旅行需求，或显式调用 `$travel-guide-pwa-builder`。
 
-## 本地静态起步 / Local static starter
+本地无后端起步项目：
 
 ```bash
 python3 scripts/create_project.py \
@@ -85,25 +101,9 @@ python3 scripts/create_project.py \
   --theme auto
 ```
 
-此 starter 为无后端的公共静态 PWA：含日期状态、行程、示意路线、工具、打印与离线壳；不含登录、私人上传和云同步。The starter is a public, dependency-free PWA and intentionally does not implement authentication, uploads, or cloud sync.
+这个起步项目不实现登录、私人上传或云同步；如需这些能力，应使用官方 Sites 工作流并先确定公开与私人边界。
 
-## 环境依赖 / Environment
-
-- Python 3.10+：运行初始化与静态审计脚本；
-- 现代浏览器：预览 Service Worker、离线与 PWA 行为；
-- Git：仅仓库工作流需要；
-- Sites 项目：遵循项目当前 `package.json`、锁文件、`.openai/hosting.json` 与官方 Sites skills，不在本仓库固定 Node/vinext/Worker 版本；
-- 网络：官方信息核查、依赖安装、地图/天气/实时数据、Sites 登录与发布、首次私人数据下载/同步需要网络。
-
-Local starter generation and static tests can run offline. Hosted builds must use the runtime declared by the current official Sites scaffold and existing project lockfile.
-
-### 没有 ChatGPT Sites 时 / Without ChatGPT Sites
-
-Skill 仍可交付本地/便携公共 PWA。等价的公开、多用户方案在概念上需要静态托管、HTTPS、服务端函数、身份、数据库/对象存储和严格的缓存边界；**本 Skill 暂不实现或提供该替代部署方案**。
-
-The skill can still deliver the local public PWA. A provider-neutral multi-user substitute would require static hosting, HTTPS, server functions, identity, durable storage, and PWA cache isolation; **this repository does not implement that alternative**.
-
-## 验证 / Validation
+## 验证
 
 ```bash
 python3 -m unittest discover -s tests -v
@@ -111,20 +111,141 @@ node --test tests/*.test.cjs
 python3 scripts/audit_travel_guide.py /path/to/guide --release
 ```
 
-静态构建不等于真机验收。iPhone 主屏幕冷启动、飞行模式、键盘缩放、地图 App 深链和已部署账号隔离必须在对应设备/域名上单独验证。A passing build is not proof of physical iPhone, deployed authentication, or real offline behavior.
+通过静态构建不等于通过真机验收。iPhone 主屏幕冷启动、飞行模式、键盘缩放、安全区、系统打印、地图 App 深链和已部署账号隔离，必须在相应设备和域名上分别验证。
 
-## 隐私 / Privacy
+## 隐私、免责声明与许可
 
-本仓库不包含真实行程、机票/火车票、订单截图、旅行者、访问码、私人设备路径、数据库、部署 ID 或凭据。复用真实路书时只抽取行为和数据契约，不能复制生产数据或个人截图。
+本仓库不包含真实旅行者、行程、票据、订单、访问码、个人装备、数据库、部署标识或凭据。真实项目只能贡献可复用的方法、数据契约和检查项，不能直接成为公开示例。
 
-This repository contains no real traveler, booking, ticket image, access code, private path, database, deployment ID, or credential. Real projects contribute reusable contracts only—not production data.
+- 中文免责声明：[DISCLAIMER.zh-CN.md](DISCLAIMER.zh-CN.md)
+- 中文许可说明：[LICENSE.zh-CN.md](LICENSE.zh-CN.md)
+- 标准 MIT 许可证：[LICENSE](LICENSE)
+- 环境与部署边界：[references/environment-and-deployment.md](references/environment-and-deployment.md)
+- 维护架构与避免循环依赖：[references/architecture-and-maintenance.md](references/architecture-and-maintenance.md)
 
-## 免责声明 / Disclaimer
+---
 
-生成内容用于旅行规划与信息整理，不保证航班、铁路、价格、签证/入境、登记、天气、道路、营业时间、保险权益或安全条件持续有效。出行前及现场请以政府、承运人、酒店和服务商的最新官方通知为准。本项目不构成法律、移民、医疗、安全或财务建议；使用者对证件、资格、预订、保险、当地规则及个人安全承担最终责任。详见 [DISCLAIMER.md](DISCLAIMER.md)。
+# Travel Guide PWA Builder
 
-Generated content is planning assistance, not a guarantee of transport, pricing, immigration, weather, road, opening-hour, insurance, or safety conditions. Verify consequential facts with the responsible authority or operator. See [DISCLAIMER.md](DISCLAIMER.md).
+Current version: **2.3.0**
 
-## 版权与许可 / Copyright and license
+Turn a one-line trip idea, a substantially fixed itinerary, or an existing guide into a destination-themed, mobile-first travel PWA for field execution, offline reading, and controlled updates. The skill supports low-interaction planning, booked-itinerary delivery, existing-site iteration, and publishing through ChatGPT Sites.
 
-Copyright © 2026 pengguin. Code and documentation are released under the [MIT License](LICENSE). Third-party assets, sources and trademarks retain their respective rights and require separate attribution or permission.
+See [README.en.md](README.en.md) for the standalone English document. The complete Chinese documentation appears before this English section.
+
+## Start with one sentence
+
+Travelers do not need an existing guide interface or a completed day-by-day plan. The entry point is a Codex conversation, for example:
+
+> Use `$travel-guide-pwa-builder`. I am planning a seven-day self-drive trip in early October with a coast, historic towns, and one easy hike. Plan it and build a mobile guide that works offline.
+
+![Invoke the skill in Codex and complete the minimal planning intake](docs/images/chat-en.png)
+
+Planning mode uses at most five compact decision stages and skips facts already supplied. It verifies only plan-invalidating facts before delivering a usable first version.
+
+## Three working modes
+
+| Mode | Typical input | Behavior |
+|---|---|---|
+| Planning | “Plan an autumn seven-day road trip.” | Resolve route-changing branches in no more than five stages, run bounded research, normalize the route, and build the first guide. |
+| Execution | “These dates, flights, and hotels are confirmed.” | Lock user-supplied facts and add daily timelines, concrete transfers, hard deadlines, and fallback branches. |
+| Update | “The hotel changed and day three starts two hours later.” | Apply the canonical delta, remove retired facts throughout the product, and rebuild the complete release. |
+
+An incremental change describes the source-data and code delta. The PWA is still built and published as one compatible release so that old pages, styles, and caches are not mixed with new ones.
+
+## Minimal planning interaction
+
+The skill asks only branch-changing questions and groups related decisions:
+
+1. dates, duration, origin, party size, and self-drive or public-transport constraints;
+2. must-see experiences, exclusions, and preferred pace;
+3. budget, stay standard, and tolerance for long transfers;
+4. mobility, climate, documents, food, or health constraints that affect the route;
+5. local delivery or ChatGPT Sites, plus whether authenticated personalization is required.
+
+Safe defaults remain visible and editable. The first research pass normally covers only entry or driving restrictions, seasonal closure risk, the longest transfer, realistic time between overnight bases, and a small number of budget anchors.
+
+## Field-first deliverables
+
+- a dynamic home showing current stage, next action, next transfer, and a real hard deadline;
+- day pages with timelines, concrete transport, collapsible detail, and delay or weather Plan B;
+- an interactive route map with date/city filters, ordered places, list fallback, and landscape operation;
+- embedded guide sections for sights, transport, and stays/food with exact return positions;
+- tools and settings for checklists, budget, emergency contacts, map sources, offline state, and full-release updates;
+- white-background, black-text print views for the itinerary, preparation checklist, and packing checklist;
+- optional separation between public guide content and private tickets, stays, equipment, and member records;
+- build, privacy, offline, mobile, and release checks plus explicit items still requiring human confirmation.
+
+![The field home leads with the next action, hard deadline, and fallback branch](docs/images/home-en.png)
+
+## Information architecture and usage tips
+
+- Separate immutable bookings, planning assumptions, and dynamic recheck items. Never silently change a hard fact.
+- Field pages follow “deadline → transition → failure branch” and keep encyclopedia content secondary.
+- Compute trip state with calendar dates. A preview is never labeled as today; flight times remain local to the ticketed airport.
+- Restore filters and the exact originating item when returning from detail; guide links inside a day return to the exact schedule node.
+- Derive map markers and the list from the same stable data. Use side-by-side map/list layout in landscape and a hand-friendly fixed map height in portrait.
+- Prefer browser fullscreen and orientation APIs for manual landscape. Do not rotate the map canvas with CSS because that breaks pointer coordinates.
+- “Update app” replaces the complete page/code/offline release. “Sync data” handles only authorized personal records.
+- Public screenshots and image exports omit names, booking references, prices, tickets, and private notes.
+
+![The landscape map, place list, and aligned controls form one operational workspace](docs/images/map-en.png)
+
+## Local environment and network dependencies
+
+- Python 3.10 or newer for project generation, static audits, and tests;
+- a modern browser for Service Worker, offline, print, orientation, safe-area, and PWA checks;
+- Git only for repository and release workflows;
+- existing hosted projects must follow their `package.json`, lockfile, `.openai/hosting.json`, and the current official Sites skills; this skill does not pin a framework or runtime version;
+- network access is required for authoritative-source checks, dependency installation, map tiles, live weather/fares, external navigation, Sites authentication/publishing, and first private-data download or sync.
+
+The local static starter can be generated and tested offline. Core public reading should work offline after a successful install; map tiles, live data, external navigation, and first private login are outside that guarantee.
+
+### Without ChatGPT Sites
+
+The skill can still deliver a local or portable public static PWA. A conceptual substitute requires static hosting, HTTPS, server functions, identity, durable database or object storage, and provider-specific cache, authorization, migration, and deployment work. **This skill currently does not implement, provide, or recommend a specific alternative hosting solution.**
+
+## Install and invoke
+
+```bash
+git clone https://github.com/pengguin/travel-guide-pwa-builder.git \
+  ~/.codex/skills/travel-guide-pwa-builder
+```
+
+Describe the trip after installation or explicitly invoke `$travel-guide-pwa-builder`.
+
+Create the dependency-free local starter:
+
+```bash
+python3 scripts/create_project.py \
+  --output /path/to/new-guide \
+  --title "Example Coast and Mountains Loop" \
+  --short-title "Coast and Mountains" \
+  --start-date 2030-10-01 \
+  --end-date 2030-10-07 \
+  --origin "Origin City" \
+  --destinations "Harbor City" "Valley Town" "Old Town" \
+  --theme auto
+```
+
+The starter intentionally has no login, private upload, or cloud synchronization. Use the official Sites workflow for those capabilities after defining the public/private boundary.
+
+## Validation
+
+```bash
+python3 -m unittest discover -s tests -v
+node --test tests/*.test.cjs
+python3 scripts/audit_travel_guide.py /path/to/guide --release
+```
+
+A passing static build is not physical-device acceptance. iPhone Home Screen cold start, flight mode, keyboard zoom, safe areas, system print, installed map-app links, and deployed account isolation require separate tests on the actual device and domain.
+
+## Privacy, disclaimer, and license
+
+This repository contains no real traveler, itinerary, ticket, booking, access code, personal equipment, database, deployment identifier, or credential. Real projects may contribute reusable methods, data contracts, and checks—not public sample data.
+
+- English disclaimer: [DISCLAIMER.en.md](DISCLAIMER.en.md)
+- English license text: [LICENSE](LICENSE)
+- Unofficial Chinese license explanation: [LICENSE.zh-CN.md](LICENSE.zh-CN.md)
+- Environment and deployment boundary: [references/environment-and-deployment.md](references/environment-and-deployment.md)
+- Maintenance architecture and circular-dependency prevention: [references/architecture-and-maintenance.md](references/architecture-and-maintenance.md)
