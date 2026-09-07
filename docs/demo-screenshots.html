@@ -25,9 +25,10 @@
     .shot { display: none; width: 100vw; height: 100vh; }
     body[data-shot="chat"] .shot-chat,
     body[data-shot="home"] .shot-home,
-    body[data-shot="map"] .shot-map { display: flex; }
+    body[data-shot="map"] .shot-map,
+    body[data-shot="logistics"] .shot-logistics { display: flex; }
 
-    /* Codex conversation — the actual entry point before a guide exists. */
+    /* Synthetic illustration of the conversation entry point; not a real app screenshot. */
     .shot-chat { background: #f7f7f5; }
     .codex-sidebar { width: 272px; padding: 28px 18px; border-right: 1px solid #deded8; background: #efefec; }
     .codex-brand { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 700; }
@@ -53,9 +54,9 @@
     .composer { position: absolute; left: 50%; bottom: 24px; transform: translateX(-36%); width: min(780px, 62vw); padding: 15px 18px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #d3d3cd; border-radius: 18px; background: white; box-shadow: 0 18px 50px rgba(0,0,0,.1); color: #888881; }
     .send { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: white; background: #111; }
 
-    /* Field home — browser-rendered product UI, not an illustration-only poster. */
+    /* Synthetic field-home illustration; not a functional starter application. */
     .shot-home { align-items: center; justify-content: center; gap: 70px; padding: 44px 80px; background: radial-gradient(circle at 20% 0%, #f6ead7 0, #dce8e6 44%, #c5d8d6 100%); }
-    .phone { width: 420px; height: 830px; border: 12px solid #0d1c22; border-radius: 48px; overflow: hidden; background: var(--paper); box-shadow: 0 34px 80px rgba(9,37,45,.28); position: relative; }
+    .phone { width: 420px; height: 860px; border: 12px solid #0d1c22; border-radius: 48px; overflow: hidden; background: var(--paper); box-shadow: 0 34px 80px rgba(9,37,45,.28); position: relative; }
     .phone-status { height: 40px; display: flex; align-items: center; justify-content: space-between; padding: 12px 24px 6px; color: white; background: var(--nav); font-size: 13px; font-weight: 700; }
     .app-head { padding: 16px 22px 20px; color: white; background: var(--nav); }
     .eyebrow { color: var(--gold); font-weight: 800; letter-spacing: .14em; font-size: 12px; }
@@ -107,7 +108,7 @@
     .filters { display: flex; gap: 10px; margin: 22px 0 18px; overflow: hidden; }
     .filter { flex: 0 0 auto; padding: 10px 16px; border: 1px solid #cbb99d; border-radius: 999px; background: var(--surface); font-size: 13px; }
     .filter.active { border-color: var(--nav); color: white; background: var(--nav); }
-    .map-workspace { height: calc(100vh - 166px); display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(360px, .8fr); gap: 18px; }
+    .map-workspace { height: calc(100vh - 210px); display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(360px, .8fr); gap: 18px; }
     .map-frame { position: relative; isolation: isolate; overflow: hidden; border: 1px solid #bba98c; border-radius: 18px; background: #aad5de; }
     .landmass { position: absolute; inset: 0; background: linear-gradient(14deg, transparent 0 37%, #eef0e6 37% 73%, transparent 73%), linear-gradient(164deg, #dbe6d0 0 25%, transparent 25% 62%, #e8e3cb 62%); opacity: .95; }
     .road { position: absolute; height: 5px; transform-origin: left center; border-radius: 8px; background: var(--gold); box-shadow: 0 0 0 2px rgba(255,255,255,.65); }
@@ -133,6 +134,16 @@
     .place small { color: var(--muted); }
     .place-actions { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 12px 0 0 28px; }
     .place-actions span { padding: 8px 6px; border: 1px solid #c7dbd9; border-radius: 8px; color: #087a77; text-align: center; font-size: 11px; font-weight: 800; }
+
+    body::after {content:"SYNTHETIC UI DEMONSTRATION · 虚构界面示意 · NOT A LIVE APP";position:fixed;bottom:5px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.06em;color:#40565b;background:rgba(255,255,255,.9);padding:4px;z-index:100;}
+    .shot-logistics {flex-direction:column;padding:46px 60px;background:var(--paper);gap:22px;}
+    .logistics-head h1 {font-size:38px;margin:8px 0;}.logistics-head p {margin:0;color:var(--muted);font-size:18px;}
+    .logistics-grid {display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+    .logistics-card {background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;}
+    .logistics-card h2{margin:8px 0 15px;font-size:25px;}.logistics-card p {font-size:17px;line-height:1.55;margin:10px 0;}
+    .logistics-card .label {color:var(--teal);font-size:12px;letter-spacing:.09em;font-weight:800;}
+    .logistics-bottom {display:grid;grid-template-columns:1.2fr 1fr;gap:20px;}.logistics-card.accent {background:var(--soft);}
+    .map-frame::after {content:"SCHEMATIC ONLY · 非导航地图";position:absolute;top:16px;left:16px;padding:8px;background:rgba(255,255,255,.9);font-size:12px;color:var(--ink);}
   </style>
 </head>
 <body>
@@ -198,6 +209,16 @@
     <nav class="side-nav"><span class="nav-item"><i></i><span data-i18n="home"></span></span><span class="nav-item"><i></i><span data-i18n="itinerary"></span></span><span class="nav-item active"><i></i><span data-i18n="map"></span></span><span class="nav-item"><i></i><span data-i18n="guide"></span></span><span class="nav-item"><i></i><span data-i18n="tools"></span></span><span class="nav-item"><i></i><span data-i18n="my"></span></span></nav>
   </section>
 
+
+  <section class="shot shot-logistics">
+    <header class="logistics-head"><span class="eyebrow">ITINERARY-LEVEL UPDATE · 2.4.0</span><h1 data-i18n="logTitle"></h1><p data-i18n="logSub"></p></header>
+    <div class="logistics-grid">
+      <article class="logistics-card"><span class="label">LUNCH · PRIMARY / BACKUP</span><h2 data-i18n="lunchName"></h2><p data-i18n="lunchFit"></p><p data-i18n="lunchTime"></p><p data-i18n="lunchBackup"></p></article>
+      <article class="logistics-card"><span class="label">DINNER · PRIMARY / BACKUP</span><h2 data-i18n="dinnerName"></h2><p data-i18n="dinnerFit"></p><p data-i18n="dinnerTime"></p><p data-i18n="dinnerBackup"></p></article>
+    </div>
+    <div class="logistics-bottom"><article class="logistics-card"><span class="label">BASE HOTEL · CONDITIONS FIRST</span><h2 data-i18n="hotelTitle"></h2><p data-i18n="hotelStorage"></p><p data-i18n="hotelCheck"></p></article><article class="logistics-card accent"><span class="label">PREPARE TONIGHT · RECOVER TOMORROW</span><h2 data-i18n="prepTitle"></h2><p data-i18n="prepItems"></p><p data-i18n="recovery"></p></article></div>
+  </section>
+
   <script>
     const params = new URLSearchParams(location.search);
     const lang = params.get('lang') === 'en' ? 'en' : 'zh';
@@ -206,13 +227,13 @@
     const copy = {
       zh: {
         newTask:'新建任务', recent:'最近', taskTitle:'规划十一山海环线', prompt:'使用 $travel-guide-pwa-builder：我计划今年十一自驾 7 天，想看海岸、古镇和一段轻徒步。请帮我规划，并制作可以离线使用的手机路书。', reply:'我会先锁定会改变路线的关键选择，最多用 5 个决策阶段。你已经给出了时间、时长、交通方式和核心偏好，现在只需要确认下面 4 项。', decisionTitle:'第 1 轮 · 路线分枝', choice1:'节奏', choice1d:'均衡，每天 1 个主目标', choice2:'住宿', choice2d:'舒适型，减少换酒店', choice3:'徒步强度', choice3d:'2–4 小时，无技术路段', choice4:'交付与隐私', choice4d:'Sites 公开路书，不启用个人资料', composer:'补充约束或直接采用推荐项…',
-        trip:'2030 山海环线', tripSub:'7 天 · 可离线现场执行', countdown:'距出发还有 12 天', today:'10月3日 周四', route:'海港市 → 山谷镇', next:'下一步', nextAction:'12:10 前结束午餐，前往东站', deadline:'13:05 最晚进入检票区', ticket:'票务', map:'地图', timeline:'今日执行主线', event1:'退房后寄存行李，步行游览旧港', event2:'取行李并前往东站', event3:'抵达山谷镇，入住后只安排晚餐', home:'首页', itinerary:'行程', guide:'指南', tools:'工具', my:'我的', storyKicker:'FIELD-FIRST DELIVERY', storyTitle:'10 秒内回答现场最重要的四个问题', storyBody:'路书优先呈现当前阶段、下一步、硬时限和失败分枝。百科内容退居二线，离线核心页面不依赖地图或实时服务才能打开。', story1:'动态首页', story1d:'按日期切换当前日，并明确区分预览与今天。', story2:'具体转场', story2d:'站点、时刻、缓冲、交通方式与备选路径。', story3:'受控更新', story3d:'显式检查完整应用版本，不把代码更新与私人同步混为一谈。', story4:'隐私分层', story4d:'公开路书与授权后的个人票据、住宿和成员记录隔离。',
-        mapTitle:'互动地图', mapSub:'地图与点位清单在横屏下并排工作', wholeTrip:'全程', coast:'海岸段', mountain:'山地区', exitLandscape:'退出横屏', roadRail:'公路 / 铁路', flight:'航班', locate:'定位我', pointList:'点位清单', count:'共 12 项', place1:'抵达海港中央站', place2:'白塔观景台', place3:'山谷游客中心', focus:'定位', dayTrip:'当日行程', navigate:'导航', deepGuide:'深导'
+        trip:'2030 山海环线', tripSub:'7 天 · 可离线现场执行', countdown:'行前预览 · 距出发还有 12 天', today:'10月3日 周四', route:'海港市 → 山谷镇', next:'下一步', nextAction:'12:10 前结束午餐，前往东站', deadline:'13:05 最晚进入检票区', ticket:'票务', map:'地图', timeline:'预览当日执行主线', event1:'退房后寄存行李，步行游览旧港', event2:'取行李并前往东站', event3:'抵达山谷镇，入住后只安排晚餐', home:'首页', itinerary:'行程', guide:'指南', tools:'工具', my:'我的', storyKicker:'FIELD-FIRST DELIVERY', storyTitle:'10 秒内回答现场最重要的四个问题', storyBody:'路书优先呈现当前阶段、下一步、硬时限和失败分枝。百科内容退居二线，离线核心页面不依赖地图或实时服务才能打开。', story1:'动态首页', story1d:'按日期切换当前日，并明确区分预览与今天。', story2:'具体转场', story2d:'站点、时刻、缓冲、交通方式与备选路径。', story3:'受控更新', story3d:'显式检查完整应用版本，不把代码更新与私人同步混为一谈。', story4:'隐私分层', story4d:'公开路书与授权后的个人票据、住宿和成员记录隔离。',
+        logTitle:'围绕旅程安排吃、住与恢复',logSub:'D4 · 虚构港湾行程｜已订交通保持不变，其他安排服务于转场',lunchName:'东站市场简餐区',lunchFit:'结束旧港散步后顺路用餐，不跨城找名店。',lunchTime:'11:30–12:10 · 40分钟 · 人均预算待核',lunchBackup:'Backup：站内现成轻食；排队超过10分钟就切换。',dinnerName:'原酒店附近家常餐',dinnerFit:'回城后短程用餐，20:00前结束，早睡。',dinnerTime:'18:30–19:15 · 45分钟 · 营业需确认',dinnerBackup:'Backup：预留酒店简餐，不依赖深夜外卖。',hotelTitle:'同一家酒店，两次入住',hotelStorage:'日团当天仍住原房，大箱留房；退房后的跨订单寄存单独确认。',hotelCheck:'落实：寄存日期、费用与凭证；凌晨前台、早餐盒、机场车。',prepTitle:'长团前完成准备',prepItems:'称重、飞行衣物、房费与机场车，都在出团前落实。',recovery:'下一天只取箱、洗衣和午睡；删去可选景点。',mapTitle:'互动地图', mapSub:'地图与点位清单在横屏下并排工作', wholeTrip:'全程', coast:'海岸段', mountain:'山地区', exitLandscape:'查看全局路线', roadRail:'公路 / 铁路', flight:'航班', locate:'定位我', pointList:'点位清单', count:'共 12 项', place1:'抵达海港中央站', place2:'白塔观景台', place3:'山谷游客中心', focus:'定位', dayTrip:'当日行程', navigate:'导航', deepGuide:'深导'
       },
       en: {
         newTask:'New task', recent:'Recent', taskTitle:'Plan an autumn coast-and-mountains loop', prompt:'Use $travel-guide-pwa-builder. I am planning a seven-day self-drive trip in early October with a coast, historic towns, and one easy hike. Plan it and build a mobile guide that works offline.', reply:'I will first lock the choices that can change the route, using no more than five decision stages. You already supplied the dates, duration, transport, and anchor experiences, so only these four choices remain.', decisionTitle:'Stage 1 · Route branches', choice1:'Pace', choice1d:'Balanced, one anchor per day', choice2:'Stays', choice2d:'Comfortable, fewer hotel changes', choice3:'Hike level', choice3d:'2–4 hours, non-technical', choice4:'Delivery & privacy', choice4d:'Public Sites guide, no personal mode', composer:'Add a constraint or accept the recommended choices…',
-        trip:'2030 Coast & Mountains Loop', tripSub:'7 days · field-ready offline guide', countdown:'12 days until departure', today:'Thu, October 3', route:'Harbor City → Valley Town', next:'Next action', nextAction:'Finish lunch by 12:10 and leave for East Station', deadline:'13:05 latest entry to the boarding area', ticket:'Tickets', map:'Map', timeline:'Today’s execution line', event1:'Check out, store luggage, walk through the old port', event2:'Collect luggage and leave for East Station', event3:'Arrive in Valley Town; check in and keep the evening light', home:'Home', itinerary:'Itinerary', guide:'Guides', tools:'Tools', my:'My', storyKicker:'FIELD-FIRST DELIVERY', storyTitle:'Answer the four critical field questions in ten seconds', storyBody:'The guide leads with current stage, next action, hard deadline, and failure branch. Encyclopedia content is secondary, and core offline pages do not depend on maps or live services to open.', story1:'Dynamic home', story1d:'Switches to the correct day and separates previews from today.', story2:'Concrete transfers', story2d:'Exact station, time, buffer, transport, and fallback path.', story3:'Controlled updates', story3d:'Checks the complete app release without confusing code updates and personal sync.', story4:'Privacy layers', story4d:'Separates the public guide from authorized tickets, stays, and member records.',
-        mapTitle:'Interactive map', mapSub:'Map and place list work side by side in landscape', wholeTrip:'Whole trip', coast:'Coast phase', mountain:'Mountain phase', exitLandscape:'Exit landscape', roadRail:'Road / rail', flight:'Flight', locate:'Locate me', pointList:'Place list', count:'12 places', place1:'Arrive at Harbor Central', place2:'White Tower viewpoint', place3:'Valley visitor center', focus:'Focus', dayTrip:'Day plan', navigate:'Navigate', deepGuide:'Guide'
+        trip:'2030 Coast & Mountains Loop', tripSub:'7 days · field-ready offline guide', countdown:'Trip preview · 12 days to departure', today:'Thu, October 3', route:'Harbor City → Valley Town', next:'Next action', nextAction:'Finish lunch by 12:10 and leave for East Station', deadline:'13:05 latest entry to the boarding area', ticket:'Tickets', map:'Map', timeline:'Preview day timeline', event1:'Check out, store luggage, walk through the old port', event2:'Collect luggage and leave for East Station', event3:'Arrive in Valley Town; check in and keep the evening light', home:'Home', itinerary:'Itinerary', guide:'Guides', tools:'Tools', my:'My', storyKicker:'FIELD-FIRST DELIVERY', storyTitle:'Answer the four critical field questions in ten seconds', storyBody:'The guide leads with current stage, next action, hard deadline, and failure branch. Encyclopedia content is secondary, and core offline pages do not depend on maps or live services to open.', story1:'Dynamic home', story1d:'Switches to the correct day and separates previews from today.', story2:'Concrete transfers', story2d:'Exact station, time, buffer, transport, and fallback path.', story3:'Controlled updates', story3d:'Checks the complete app release without confusing code updates and personal sync.', story4:'Privacy layers', story4d:'Separates the public guide from authorized tickets, stays, and member records.',
+        logTitle:'Fit meals, stays and recovery to the trip',logSub:'D4 · Fictional harbor journey | Booked transport stays fixed; support plans fit around it',lunchName:'East Station market lunch',lunchFit:'Eat along the route after the old-port walk; avoid a cross-city detour.',lunchTime:'11:30–12:10 · 40 minutes · Budget to verify',lunchBackup:'Backup: ready-to-go station food. Switch if the queue exceeds 10 minutes.',dinnerName:'Local food near the base hotel',dinnerFit:'A short trip after returning to town. Finish before 20:00 and sleep early.',dinnerTime:'18:30–19:15 · 45 minutes · Hours to confirm',dinnerBackup:'Backup: pre-arranged hotel food; do not depend on late-night delivery.',hotelTitle:'One hotel, two reservations',hotelStorage:'Keep the room during a day tour. Confirm storage separately after checkout between stays.',hotelCheck:'Confirm dates, fee and receipt; early reception, breakfast box and airport car.',prepTitle:'Prepare before the long tour',prepItems:'Weigh bags, set out flight clothes, settle charges and confirm the airport car before leaving.',recovery:'The next day: collect bags, do laundry and rest. Drop optional sights.',mapTitle:'Interactive map', mapSub:'Map and place list work side by side in landscape', wholeTrip:'Whole trip', coast:'Coast phase', mountain:'Mountain phase', exitLandscape:'Fit route', roadRail:'Road / rail', flight:'Flight', locate:'Locate me', pointList:'Place list', count:'12 places', place1:'Arrive at Harbor Central', place2:'White Tower viewpoint', place3:'Valley visitor center', focus:'Focus', dayTrip:'Day plan', navigate:'Navigate', deepGuide:'Guide'
       }
     };
     document.querySelectorAll('[data-i18n]').forEach((node) => { node.textContent = copy[lang][node.dataset.i18n] || node.dataset.i18n; });

@@ -44,14 +44,14 @@ For a code-split app, do not automatically call `skipWaiting()` in the install h
 2. leave it waiting while old clients remain;
 3. expose a **Check/update app version** action that detects a waiting worker and explicitly messages it to activate;
 4. reload once after `controllerchange`;
-5. delete only guide-owned old caches during activation, when the controlled reload is ready;
+5. keep old guide-owned caches while any old clients can request their assets; only clean them when no such clients remain;
 6. otherwise allow normal activation after every old tab/client closes.
 
 Keep **app version update** separate from **personal data sync**. The former installs a new code/content release and reloads the app; the latter uploads/downloads authorized member records. Label both status and last-check time clearly.
 
 The settings UI should distinguish the stable display release from a unique internal build/release ID and a service-worker cache name. Every deployable asset set receives a new build ID even when a maintenance patch intentionally keeps the public version label. Never report an installed client as current merely because the visible label matches; compare a machine-readable release manifest and verify the complete public precache before reporting readiness.
 
-Treat offline verification as an active repair operation when online, not only a cache inventory. A user-triggered recheck should ask the controlling service worker to refetch the current precache through a `MessageChannel`, then verify every manifest entry inside the exact current-release static cache. Fetch the manifest with a cache-busting query that the service worker sends network-only. Update the visible verification time after every completed attempt, including incomplete results.
+For apps with a release manifest and verified repair implementation, treat offline verification as an active repair operation when online, not only a cache inventory. A user-triggered recheck should ask the controlling service worker to refetch the current precache through a `MessageChannel`, then verify every manifest entry inside the exact current-release static cache. Fetch the manifest with a cache-busting query that the service worker sends network-only. Update the visible verification time after every completed attempt, including incomplete results.
 
 When the server release ID equals the client release ID, still run service-worker update/activation and precache repair. “No newer release” does not prove that the current cache is complete. If a waiting worker exists, activate it under the product's explicit update policy before messaging the new controller. Report missing counts and recovery instructions rather than a false ready state.
 
@@ -83,3 +83,9 @@ Include Apple mobile-web-app metadata, a PNG touch icon, `viewport-fit=cover`, s
 7. Restore the network/server and verify the current cache version activates without serving stale HTML or missing chunks. Keep an old lazy route open during an update and prove it does not lose its old CSS/JS before the controlled activation.
 8. Separately repeat on the deployed HTTPS domain and physical iPhone when the user requires genuine iOS acceptance.
 9. For private mode, download authorized synthetic test data online, then verify offline reading and expiry behavior. Switch users/logout and prove private records cannot reappear through a shared cache or stale request. Never copy production records into test fixtures.
+
+## Integrity and failure outcomes
+
+For a manifest-driven app, record per-file SHA-256 digests, fetch into a staging cache, verify response status/bytes and commit readiness only after every core file is present. Missing chunks, changed HTML, stale manifests and network failures reject installation or repair; a version-label match is not success. A repair request should include the expected release, return a structured result and terminate on a bounded timeout. Preserve the previously complete cache on failure.
+
+The neutral static starter uses an explicit `addAll` list. It deletes a failed install cache, reads assets only from its current release, retains older guide caches while windows exist, and returns 503 for a missing core asset rather than mixing in a new unversioned network file. It does **not** implement digest-based repair or an end-user update UI. Bump its cache name for every asset change and close old guide windows for natural activation, or implement and test an explicit update flow. Do not advertise the full architecture contract as a built-in starter feature.

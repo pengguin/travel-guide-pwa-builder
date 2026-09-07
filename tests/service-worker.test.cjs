@@ -51,3 +51,31 @@ test('public shell opens offline without waiting for remote fetch or mixing HTML
   assert.equal(await (await response).text(), 'cached shell');
   assert.equal(puts.length, 0);
 });
+
+function releaseFixture({present=true,installFails=false,clients=[],keys=[]}={}) {
+  const listeners={},deleted=[];let claimed=0,fetches=0,globalMatches=0;
+  const cache={addAll:async()=>{if(installFails)throw Error('missing core file')},match:async()=>present?new Response('current release'):undefined};
+  vm.runInNewContext(source,{
+    URL,Response,Set,
+    self:{location:{href:'https://example.com/guide/service-worker.js',origin:'https://example.com'},addEventListener:(n,cb)=>listeners[n]=cb,skipWaiting:async()=>{},clients:{matchAll:async()=>clients,claim:async()=>{claimed++}}},
+    caches:{open:async()=>cache,keys:async()=>keys,delete:async k=>deleted.push(k),match:async()=>{globalMatches++;return new Response('old release')}},
+    fetch:async()=>{fetches++;return new Response('newer server file')},
+  });
+  return {listeners,deleted,stats:()=>({claimed,fetches,globalMatches})};
+}
+const lifecycle=async(f,name)=>{let task;f.listeners[name]({waitUntil:p=>task=p});await task};
+test('failed install rejects and removes incomplete current cache',async()=>{
+ const f=releaseFixture({installFails:true});await assert.rejects(lifecycle(f,'install'),/missing core/);assert.deepEqual(f.deleted,['__CACHE_NAME__-precache']);
+});
+test('activation retains prior releases while any windows remain',async()=>{
+ const f=releaseFixture({clients:[{id:'synthetic-old-client'}],keys:['__CACHE_PREFIX__old-precache']});await lifecycle(f,'activate');assert.deepEqual(f.deleted,[]);
+});
+test('activation with no windows deletes only this guides older caches',async()=>{
+ const f=releaseFixture({keys:['__CACHE_PREFIX__old-precache','__CACHE_NAME__-precache','unrelated']});await lifecycle(f,'activate');assert.deepEqual(f.deleted,['__CACHE_PREFIX__old-precache']);
+});
+test('a cached file uses the current release instead of a global older match',async()=>{
+ const f=releaseFixture();let response;f.listeners.fetch({request:{method:'GET',mode:'cors',url:'https://example.com/guide/app.js'},respondWith:p=>response=p});assert.equal(await (await response).text(),'current release');assert.equal(f.stats().globalMatches,0);
+});
+test('a missing core asset cannot fall through to a newer unversioned network file',async()=>{
+ const f=releaseFixture({present:false});let response;f.listeners.fetch({request:{method:'GET',mode:'cors',url:'https://example.com/guide/app.js'},respondWith:p=>response=p});assert.equal((await response).status,503);assert.equal(f.stats().fetches,0);assert.equal(f.stats().globalMatches,0);
+});

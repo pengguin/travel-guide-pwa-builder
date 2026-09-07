@@ -1,4 +1,4 @@
 interface:
   display_name: "Travel Guide PWA Builder"
   short_description: "Build field-ready offline travel PWAs with ChatGPT Sites"
-  default_prompt: "Use $travel-guide-pwa-builder to plan, build, or update a sourced, destination-themed travel PWA. In planning mode, use no more than five compact decision stages and verify only plan-invalidating facts before delivering the first guide. For existing guides, treat the project as the instance source of truth, fix shared architecture rather than regenerating from an older starter, and generalize only validated lessons. Optimize field use around current stage, next action, hard deadline, executable transfer, stable in-frame navigation, orientation-safe maps, consistent summary-to-editor flows, direct same-page printing, self-healing controlled PWA updates, public/private separation, and the official ChatGPT Sites workflow."
+  default_prompt: "Use $travel-guide-pwa-builder to build or update a sourced offline travel PWA, preserving booked transport and coordinating daily meals, hotel logistics, maps and release verification."

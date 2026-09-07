@@ -1,6 +1,6 @@
 # 旅行路书 PWA 构建技能
 
-当前版本：**2.3.0**
+当前版本：**2.4.0**
 
 把一句旅行想法、已经确认的行程，或一套正在使用的路书，转成适合手机现场执行、可离线阅读、能够持续更新的旅行 PWA。技能支持低交互规划、固定行程落地、既有站点迭代，以及通过 ChatGPT Sites 发布。
 
@@ -12,7 +12,9 @@
 
 > 使用 `$travel-guide-pwa-builder`：我计划今年十一自驾 7 天，想看海岸、古镇和一段轻徒步。请帮我规划，并制作可以离线使用的手机路书。
 
-![在 Codex 对话中调用技能并完成最小化规划输入](docs/images/chat-zh.png)
+以下图片均为自包含 HTML 渲染的虚构界面示意，不是 Codex 或实际路书截图；详见[图片来源](docs/SCREENSHOTS.md)。
+
+![虚构对话中的技能调用与最小化规划输入](docs/images/chat-zh.png)
 
 规划模式最多进行五个紧凑的决策阶段；已经回答的内容自动跳过。技能先核查可能推翻路线的关键事实，再交付可用初版，不会在生成路书之前要求用户写出完整日程。
 
@@ -125,9 +127,41 @@ python3 scripts/audit_travel_guide.py /path/to/guide --release
 
 ---
 
+
+## 2.4.0：按行程更新，按实际能力交付
+
+- 已订机票/火车保持不变；团与个人主题优先，餐饮、酒店、取箱和睡眠围绕它们调整。
+- 每天午餐/晚餐各一主一备；酒店列出晚到、早退、早餐和跨订单寄存条件，候选不等于预订。
+- 同步首页、逐日行程、地图、深导日期、提醒、日历、预算和完整离线发布包。
+- 审计自动识别静态与Sites/Vinext公开目录，检查缺失图标和可选摘要清单；源码检查需显式选择。
+
+![虚构行程的按日食宿与次日准备示意](docs/images/logistics-zh.png)
+
+| 能力 | 本包实际提供 | 仍需项目实现/验证 |
+| --- | --- | --- |
+| 便携静态起步 | 本地数据、日期状态、清单、日历、打印入口、基础离线缓存 | 最终行程、实景图与实际地图集成 |
+| 行程更新 | 固定票务、食宿/恢复/寄存与派生视图的执行方法 | 在已有项目中完成数据与页面同步 |
+| 发布审计 | 公开目录、资源、图标、可选SHA-256与启发式泄露检查 | API权限、浏览器行为、所有私人内容识别 |
+| 整包更新 | 起步缓存隔离与失败行为；完整应用更新架构说明 | 起步项目没有摘要修复、成员后端或用户更新按钮 |
+| 文档图片 | 浏览器渲染的双语虚构界面示意 | 不是真实Codex截图、实际路书地图或真机验收证据 |
+
+新增审计用法：
+
+```sh
+python3 scripts/audit_travel_guide.py /path/to/guide --release
+python3 scripts/audit_travel_guide.py /path/to/guide --release --public-dir custom/output
+python3 scripts/audit_travel_guide.py /path/to/guide --release --source
+python3 scripts/check_docs.py
+```
+
+`--release`默认只审部署后的公开资源；`--source`另查源码，可能包括合法的私有服务端记录。检查结果不代替人工隐私审查或浏览器/真机验收。
+
+发布说明：[CHANGELOG](CHANGELOG.md) · [验证与打包流程](docs/releases/2.4.0.md) · [截图来源](docs/SCREENSHOTS.md) · [参与维护](CONTRIBUTING.md) · [GitHub Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.4.0)。下载ZIP与SHA-256文件核对；解压后的技能目录应为`travel-guide-pwa-builder`。
+
+
 # Travel Guide PWA Builder
 
-Current version: **2.3.0**
+Current version: **2.4.0**
 
 Turn a one-line trip idea, a substantially fixed itinerary, or an existing guide into a destination-themed, mobile-first travel PWA for field execution, offline reading, and controlled updates. The skill supports low-interaction planning, booked-itinerary delivery, existing-site iteration, and publishing through ChatGPT Sites.
 
@@ -138,6 +172,8 @@ See [README.en.md](README.en.md) for the standalone English document. The comple
 Travelers do not need an existing guide interface or a completed day-by-day plan. The entry point is a Codex conversation, for example:
 
 > Use `$travel-guide-pwa-builder`. I am planning a seven-day self-drive trip in early October with a coast, historic towns, and one easy hike. Plan it and build a mobile guide that works offline.
+
+The images below are synthetic UI illustrations rendered from self-contained HTML, not screenshots of Codex or a deployed guide. See [image provenance](docs/SCREENSHOTS.md).
 
 ![Invoke the skill in Codex and complete the minimal planning intake](docs/images/chat-en.png)
 
@@ -249,3 +285,34 @@ This repository contains no real traveler, itinerary, ticket, booking, access co
 - Unofficial Chinese license explanation: [LICENSE.zh-CN.md](LICENSE.zh-CN.md)
 - Environment and deployment boundary: [references/environment-and-deployment.md](references/environment-and-deployment.md)
 - Maintenance architecture and circular-dependency prevention: [references/architecture-and-maintenance.md](references/architecture-and-maintenance.md)
+
+
+## 2.4.0: itinerary changes with clear capability boundaries
+
+- Keep booked flights/trains immutable. Fit meals, base hotels, luggage and sleep around prioritized operator products and personal themes.
+- Prefer one primary and one backup for each daily lunch/dinner. State late arrival, early checkout, breakfast and cross-reservation storage conditions; a candidate is not a booking.
+- Synchronize the home, days, maps, guide dates, reminders, calendar, budget and complete offline release.
+- Detect static and Sites/Vinext public output, check icons and optional SHA-256 manifests; choose a source scan explicitly.
+
+![Synthetic daily meal, hotel and prior-evening preparation illustration](docs/images/logistics-en.png)
+
+| Capability | Included in this package | Still requires implementation/verification |
+| --- | --- | --- |
+| Portable static starter | Local data, date state, checklists, calendar, print entry and basic offline cache | Final itinerary, real images and actual map integration |
+| Itinerary updates | Fixed-ticket, food/stay, recovery/storage and derived-view workflow | Applying the delta to the existing project |
+| Release audit | Public directory, assets, icons, optional SHA-256 and heuristic leakage checks | API permissions, browser behavior and every possible private datum |
+| Whole-app updates | Starter cache isolation/failure behavior and full-app architecture guidance | No starter digest repair, member backend or end-user update button |
+| Documentation images | Browser-rendered bilingual fictional UI illustrations | Not current Codex screenshots, real travel maps or device acceptance evidence |
+
+Audit examples:
+
+```sh
+python3 scripts/audit_travel_guide.py /path/to/guide --release
+python3 scripts/audit_travel_guide.py /path/to/guide --release --public-dir custom/output
+python3 scripts/audit_travel_guide.py /path/to/guide --release --source
+python3 scripts/check_docs.py
+```
+
+`--release` scans deployed public files by default. `--source` adds a source-tree review, which may include legitimate authorized server records. Neither replaces manual privacy review or browser/device acceptance.
+
+See the [changelog](CHANGELOG.md), [verification and packaging](docs/releases/2.4.0.md), [image provenance](docs/SCREENSHOTS.md), [contributing](CONTRIBUTING.md) and [GitHub Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.4.0). Verify the ZIP with its SHA-256 file; the extracted skill folder is `travel-guide-pwa-builder`.

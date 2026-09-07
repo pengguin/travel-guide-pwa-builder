@@ -45,3 +45,11 @@ On logout/account switch/revocation detected online, clear private UI, records a
 Sync only the current member's records. Track revision/updatedAt and explicit pending writes; resolve conflicts rather than overwriting a newer server profile with an old offline copy. Provide a manual sync control when automatic sync is unreliable, with actual success/error/pending status. Do not report success merely because the device is online.
 
 Acceptance: guest cannot read private endpoints/assets; unrelated signed-in user cannot read owner data; each member sees/edits only their own records; reusable code works twice; same-name user is isolated; extension preserves data; login updates every dependent screen without repeated taps; logout/account switch cannot flash or restore the prior user's data; expiry reminder can be dismissed; concurrent/offline edits do not silently overwrite one another.
+
+## Race and offline lifecycle checks
+
+Invalidate outstanding requests on logout, account switch, role change and known lease expiry. A late successful response must not restore the departed session. Persist an explicit sign-out marker where needed so offline reload cannot resurrect its cache. Validate a cached profile's schema, member identity and expiry before displaying it; a valid offline cache and a server-authoritative 401/403 are different outcomes.
+
+Bind requests to the page's expected member as a stale-page check in addition to authenticating the current server session. Reject a mismatched expected identity before reading/writing state. This is not a substitute for server authorization.
+
+Scope checklists, custom items and manual date overrides by member or guest. Migrate a legacy record only when ownership is reliable; preserve ambiguous source data without assigning it to the next person who signs in. Changing the current session need not erase another member's unsynchronized local checklist, but it must make that checklist inaccessible in the current view.

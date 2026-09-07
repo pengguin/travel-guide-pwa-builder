@@ -42,7 +42,7 @@ Never repair a mature guide by regenerating it from the currently installed skil
 
 - Map markers, list entries, filters and route lines derive from the same normalized records.
 - Do not rotate a live map with CSS transforms to simulate landscape. Visual coordinates and pointer coordinates diverge, producing drag and tap errors.
-- Prefer Fullscreen and Screen Orientation APIs when supported. Otherwise switch only the page layout and explain the device limitation.
+- Use automatic responsive layout by default. Add manual fullscreen/orientation controls only when requested and supported; explain any device limitation.
 - After layout, fullscreen or orientation changes, wait for the new box size and call the map library's size invalidation method.
 - Keep legend, orientation and locate controls in a single map-owned control row. Align height, typography, surface and focus states. For repeated point actions, a fixed grid may reserve an inert optional slot so the first three actions never shift between rows.
 - A remote tile provider is an online enhancement, not the route database. Offer a second provider when useful, retain attribution, and preserve an offline point list. Do not promise uniform regional reachability or offline tiles unless tested and licensed.
@@ -51,7 +51,7 @@ Never repair a mature guide by regenerating it from the currently installed skil
 
 - `window.print()` must remain a direct consequence of the user's click. Do not open a helper page and then attempt an automatic print from an asynchronous event.
 - Prefer a same-page print target: set a target attribute/class synchronously, call print, and clear the target on `afterprint`. Do not clear it with a short timer because iOS may render the print preview later.
-- In `@media print`, explicitly set the page, body, target, cards, rows, headings, links, table cells and form text to white backgrounds and black text. Hide fixed navigation and floating controls.
+- In `@media print`, explicitly set the page, body, target, cards, rows, headings, links, table cells and form text to white backgrounds and black text. Hide fixed navigation and floating controls. Elements hidden with visibility alone still occupy layout space; check page count and remove hidden ancestors from print layout so blank trailing pages do not remain.
 - Test each print target separately in light and dark screen modes. A successful itinerary print does not prove the checklist or packing target.
 
 ## Collection-editing invariants

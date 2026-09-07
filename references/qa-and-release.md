@@ -45,7 +45,7 @@ Always run applicable automated checks. For Sites, perform browser UI QA only wh
 
 ## Release archive
 
-The following flat ZIP rules apply to portable static output. Sites publication must instead use the official packaging helper with its current Worker/static contract, metadata and migrations. The included static audit is not a Worker runtime or authorization audit.
+The following flat ZIP rules apply to portable static output. Sites publication must instead use the official packaging helper with its current Worker/static contract, metadata and migrations. The included auditor detects static and Sites/Vinext layouts, but is not a Worker runtime or authorization audit. `--release` scans deployed public files, `--source` explicitly adds a source-tree scan, and `--public-dir` selects a nonstandard output. A source copy cannot satisfy a missing deployed asset.
 
 - Build output should contain the entry HTML, manifest, icons, service worker, and versioned assets.
 - ZIP the contents of the deploy directory at archive root; do not wrap them in an extra project folder unless the host explicitly requires it.
@@ -74,3 +74,5 @@ The following flat ZIP rules apply to portable static output. Sites publication 
 ## Evidence standard
 
 A passing static build proves compilation only. Do not report browser, PWA, offline, or deployment behavior as verified unless each was tested. State untested areas plainly.
+
+Use [itinerary-updates.md](itinerary-updates.md) to verify fixed-ticket deltas, recovery, food/stay coverage and cross-reservation luggage storage. Release heuristics never establish that an operator product or a hotel service has been booked.

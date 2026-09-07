@@ -1,8 +1,8 @@
 ---
 name: travel-guide-pwa-builder
-description: Plan, build, or update a destination-themed, mobile-first travel guide PWA from a one-sentence trip idea, structured itinerary, or existing guide. Use for Chinese route books, offline itinerary websites, travel portals, and reusable travel frameworks. Includes a low-interaction planning mode, local static starter, focused source verification, mobile navigation, public/private data separation, optional member workflows, and publishing through ChatGPT Sites using the official Sites skills. No reference sample or completed day-by-day plan is required. Do not use as the primary workflow for PDF-only or single-file HTML artifacts.
+description: Build or update a mobile travel guide PWA or travel website, from a rough trip idea or an existing itinerary. Use for an explicitly requested website/PWA deliverable; not ordinary travel advice, PDF-only work, or a single-file HTML request.
 metadata:
-  version: "2.3.0"
+  version: "2.4.0"
 ---
 
 # Travel Guide PWA Builder
@@ -13,7 +13,7 @@ Build a travel guide that remains useful on a phone during the trip. Preserve fi
 
 1. **Planning mode:** for a rough idea such as “今年十一去某地自驾”. Read [planning-mode.md](references/planning-mode.md). Ask no more than five compact decision stages, perform a bounded feasibility check, normalize a draft itinerary, and deliver an initial guide. Do not wait for the user to write a detailed route.
 2. **Execution mode:** for a substantially fixed itinerary or booked transport. Lock supplied facts and proceed directly; ask only if a missing choice would materially change the result.
-3. **Update mode:** for an existing guide. Treat the newest explicit facts as the canonical delta, update the normalized records, rebuild the complete deployable release, and globally remove retired data.
+3. **Update mode:** for an existing guide. Apply the newest explicit facts as a scoped delta, preserve immutable bookings and member edits, synchronize dependent views and rebuild the complete release. Read [itinerary-updates.md](references/itinerary-updates.md) for multi-day changes, day tours, recovery and base-hotel logistics. Retire obsolete active advice while preserving historical notes and real bookings until the user changes them.
 
 A reference sample is optional in every mode. If optional answers are missing, use safe declared defaults and continue.
 
@@ -23,7 +23,7 @@ A reference sample is optional in every mode. If optional answers are missing, u
 2. Reuse the user's existing guide framework when one is named or clearly established. Preserve its information architecture and interaction patterns unless the user asks for a redesign.
 3. For a hosted guide, a project containing `.openai/hosting.json`, or requested accounts/server synchronization, read [sites-workflow.md](references/sites-workflow.md). Use the currently installed official `sites-building` and `sites-hosting` skills, including their required references. Preserve existing project identity. Sites is the only built-in publishing workflow; do not add or fall back to EdgeOne or another provider.
 4. For an explicitly local/portable guide without a server, read [standalone-mode.md](references/standalone-mode.md) and run `scripts/create_project.py`. This dependency-free starter has no authentication or cloud synchronization. A reference sample or finalized itinerary is never required; planning mode may populate the starter after route normalization. Do not turn its static files into a mock secure login.
-5. For single-file HTML or print-first PDF requests, use the matching artifact workflow instead.
+5. For single-file HTML, handle the requested artifact directly with available tools; for print-first PDF, use the active official PDF skill. Do not require the removed travel-guidebook or travel-plan-viz skills.
 
 For an existing guide, the live project's normalized records, routes, styles, tests and release contract are the ground truth for that instance. The reusable skill is a method and invariant checklist, not a generator that may overwrite a newer application architecture. Read [architecture-and-maintenance.md](references/architecture-and-maintenance.md) before broad refactors or before feeding lessons from a real project back into this skill.
 
@@ -143,13 +143,13 @@ Read [pwa-offline.md](references/pwa-offline.md) whenever the request includes o
 Before delivery:
 
 1. Run the project's production build.
-2. Run `python3 scripts/audit_travel_guide.py <project-path> --release` from this skill directory, or run equivalent checks manually if the project structure differs. The standalone starter intentionally fails until its final-itinerary marker is removed.
+2. Run `python3 scripts/audit_travel_guide.py <project-path> --release` from this skill directory. The auditor recognizes static and Sites/Vinext public output; use `--public-dir` for another layout and `--source` for a separate source-tree scan. It does not test authorization or browser behavior. The standalone starter intentionally fails until its final-itinerary marker is removed.
 3. Search globally for retired destination names, dates, stale route labels, placeholder text, private paths, and old cache keys.
 4. Preview the production build, not only the development server.
 5. Run automated content, date, permissions and release checks. When browser QA is requested/authorized, test desktop/mobile routes, expandable content, maps, navigation, reload, offline cold start and overflow. Follow official Sites browser-testing rules; otherwise report browser and physical-device checks as untested.
-6. Exercise every selected/unselected/disabled/focus state in both light and dark modes. Check controls over map tiles, floating controls, warnings, active filters, inputs, and navigation against semantic theme tokens rather than one-off colors.
-7. Print each supported itinerary/checklist view from its explicit user action. Printed pages must force white surfaces and black text independent of the selected screen theme; a mobile print action must not be invoked again by timers or lifecycle effects.
-8. Verify the install icon and PWA manifest on a mobile-sized viewport. For a physical iPhone requirement, repeat on the deployed HTTPS URL and state explicitly if that step remains untested.
+6. When browser QA is authorized, exercise every selected/unselected/disabled/focus state in both light and dark modes. Check controls over map tiles, floating controls, warnings, active filters, inputs, and navigation against semantic theme tokens rather than one-off colors.
+7. When browser/system QA is authorized, print each supported itinerary/checklist view from its explicit user action. Printed pages must force white surfaces and black text independent of the selected screen theme; a mobile print action must not be invoked again by timers or lifecycle effects.
+8. When browser QA is authorized, verify the install icon and PWA manifest on a mobile-sized viewport. For a physical iPhone requirement, repeat on the deployed HTTPS URL and state explicitly if that step remains untested.
 9. For a requested portable ZIP, package public static deploy contents at archive root. For Sites, use its current official packaging helper and contract; a server-backed Sites archive is not interchangeable with a static ZIP.
 
 Read [qa-and-release.md](references/qa-and-release.md) for the complete release gate.

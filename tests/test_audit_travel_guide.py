@@ -29,6 +29,9 @@ class AuditTravelGuideTests(unittest.TestCase):
                 "export const image = '/images/example.png';", encoding="utf-8"
             )
             (root / "dist").mkdir()
+            (root / "dist" / "icon.png").write_bytes(b"icon")
+            (root / "dist" / "images").mkdir()
+            (root / "dist" / "images" / "example.png").write_bytes(b"image-one")
             (root / "dist" / "index.html").write_text("<main>Example Trip</main>", encoding="utf-8")
             (root / "dist" / "manifest.webmanifest").write_text(
                 '{"start_url":"./","scope":"./","display":"standalone","icons":[{"src":"icon.png"}]}',
@@ -75,6 +78,7 @@ class AuditTravelGuideTests(unittest.TestCase):
     def test_release_requires_service_worker(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            (root / "icon.png").write_bytes(b"icon")
             (root / "index.html").write_text("<main>Example</main>", encoding="utf-8")
             (root / "manifest.webmanifest").write_text(
                 '{"start_url":"./","scope":"./","display":"standalone","icons":[{"src":"icon.png"}]}',
@@ -87,6 +91,7 @@ class AuditTravelGuideTests(unittest.TestCase):
     def test_empty_framework_root_warns(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            (root / "icon.png").write_bytes(b"icon")
             (root / "index.html").write_text('<div id="root"></div>', encoding="utf-8")
             (root / "manifest.webmanifest").write_text(
                 '{"start_url":"./","scope":"./","display":"standalone","icons":[{"src":"icon.png"}]}',

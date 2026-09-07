@@ -27,3 +27,9 @@ A conceptual substitute would combine a static host, HTTPS, serverless or edge f
 ## Responsibility and disclaimer
 
 Generated routes, schedules, prices, border/visa notes, weather advice, health/safety notes and provider benefits can change. Mark dynamic facts for recheck and direct travelers to the responsible official authority/operator before acting. The guide is planning assistance, not a guarantee and not legal, immigration, medical, safety or financial advice. Users remain responsible for eligibility, bookings, insurance, documents, local rules and safe decisions.
+
+## Public output audit
+
+`audit_travel_guide.py PROJECT --release` selects `dist/client/` for Sites/Vinext, `dist/` for a flat build, or the root for a portable static project. Supported static hosting metadata can select a custom output; `--public-dir relative/output` makes that selection explicit. Worker presence is checked for detected Sites/Vinext packages. Pass `--source` separately when intending to review the source tree, which may legitimately contain authorized server-only records. Neither mode proves permissions, absence of every possible private datum or correct behavior on a physical device.
+
+For server-rendered Sites/Vinext projects, pass the project or dist root. An existing Worker entry may generate HTML without a static index; the audit reports that as a live/offline verification reminder. Passing only client assets cannot prove the server entry.

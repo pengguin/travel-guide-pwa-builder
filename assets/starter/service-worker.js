@@ -16,7 +16,12 @@ const APP_SHELL = [
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(PRECACHE);
-    await cache.addAll(APP_SHELL);
+    try {
+      await cache.addAll(APP_SHELL);
+    } catch (error) {
+      await caches.delete(PRECACHE);
+      throw error;
+    }
   })());
 });
 self.addEventListener('message', (event) => {
@@ -24,7 +29,8 @@ self.addEventListener('message', (event) => {
 });
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
-    const keys = await caches.keys();
+    const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const keys = windows.length ? [] : await caches.keys();
     await Promise.all(
       keys
         .filter((key) => key.startsWith(CACHE_PREFIX) && key !== PRECACHE && key !== RUNTIME)
@@ -60,17 +66,16 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   event.respondWith((async () => {
-    const cached = await caches.match(request, { ignoreVary: true });
+    // The current worker owns one whole release. A global caches.match can
+    // silently serve an older file with the same unversioned starter name.
+    const cache = await caches.open(PRECACHE);
+    const cached = await cache.match(request, { ignoreVary: true });
     if (cached) return cached;
-    try {
-      const response = await fetch(request);
-      if (response.ok) {
-        const cache = await caches.open(RUNTIME);
-        await cache.put(request, response.clone());
-      }
-      return response;
-    } catch {
-      return new Response('', { status: 503, statusText: 'Offline' });
-    }
+    // Do not mix a newly deployed unversioned file into an old cached shell.
+    // Close old tabs and install a complete release; this starter has no
+    // manifest-aware same-version repair UI.
+    return new Response('Core offline asset missing. Reopen online after updating the complete guide.', {
+      status: 503, statusText: 'Incomplete offline release',
+    });
   })());
 });
