@@ -28,7 +28,7 @@ For requested expiry reminders, persist lease start/end and compute remaining fr
 - Members may edit their own amounts, private transport additions/overrides, stays and notes when requested. Shared route changes require separate permission; do not silently edit other travelers or the public itinerary.
 - Present saved tickets and stays as compact summaries with the same Details → inline edit → Save/Cancel pattern. New items scroll to a single draft editor and collapse after save. Keep checkbox selection hit areas independent from row-level editing actions.
 - Resolve selected shared segment IDs plus member-specific segments into one chronological ticket list. Preserve a same-number flight with different boarding point as a distinct segment. Show admin preview of the selected member's resolved list, not just the owner's checkbox list.
-- Keep one auth/profile state source. After login, await a fresh authorized profile, update shared state, invalidate ticket/stay/home selectors, and render immediately. Handle login-return/focus refresh, stale requests after logout and account switching; use cancellation or a session generation guard.
+- Keep one auth/profile state source. First login and a new identity require server authorization. Later launches may immediately hydrate a valid prior offline grant and cached profile, then revalidate in the background; do not downgrade to guest merely because verification failed. Update shared selectors after a successful refresh. Use cancellation or a session generation guard for login-return/focus refresh, logout and account switching. See [offline-identity.md](offline-identity.md) for the decision table.
 - Use explicit guest, loading, ready, empty and failed states. Distinguish 'structured ticket information available', 'original attachment not linked' and 'data fetch failed'; never say 'not provided' just because an upload has not been imported.
 - Parent navigation should return editor → selected member/profile → My, not jump every screen to Tools. Preserve unsaved data deliberately and restore list context.
 
@@ -40,7 +40,7 @@ Model a booked stay separately from a recommendation: member/trip IDs, property/
 
 Public reading and guest checklists may stay local. Private offline availability requires prior authorized download and explicit device storage choice; first login and first private fetch cannot work offline. Use separate namespaced stores keyed by site/trip/member, not one global profile cache. Do not runtime-cache private APIs in the shared service worker.
 
-On logout/account switch/revocation detected online, clear private UI, records and attachments for that session as specified; do not erase unrelated members' server data. Local expiry is a usability/privacy control, not a guarantee of remote revocation while disconnected. Explain that downloaded data can persist and browser storage is not protection against an unlocked shared device; stronger offline secrecy requires encryption and an unlock design, not just a hidden tab.
+On explicit logout, a confirmed account switch, known local expiry or authenticated revocation bound to this member, clear private UI and invalidate the affected offline grant and stored records/attachments as specified; do not erase unrelated members' server data. Local expiry is a usability/privacy control, not a guarantee of remote revocation while disconnected. Explain that downloaded data can persist and browser storage is not protection against an unlocked shared device; stronger offline secrecy requires encryption and an unlock design, not just a hidden tab.
 
 Sync only the current member's records. Track revision/updatedAt and explicit pending writes; resolve conflicts rather than overwriting a newer server profile with an old offline copy. Provide a manual sync control when automatic sync is unreliable, with actual success/error/pending status. Do not report success merely because the device is online.
 
@@ -48,7 +48,7 @@ Acceptance: guest cannot read private endpoints/assets; unrelated signed-in user
 
 ## Race and offline lifecycle checks
 
-Invalidate outstanding requests on logout, account switch, role change and known lease expiry. A late successful response must not restore the departed session. Persist an explicit sign-out marker where needed so offline reload cannot resurrect its cache. Validate a cached profile's schema, member identity and expiry before displaying it; a valid offline cache and a server-authoritative 401/403 are different outcomes.
+Invalidate outstanding requests on logout, account switch, role change and known lease expiry. A late successful response must not restore the departed session. Persist an explicit sign-out marker where needed so offline reload cannot resurrect its cache. Validate a cached profile's schema, member identity and expiry before displaying it; interpret a 401/403 through the documented API contract. An expired online session is not automatically a revoked offline grant; server writes still require current authorization.
 
 Bind requests to the page's expected member as a stale-page check in addition to authenticating the current server session. Reject a mismatched expected identity before reading/writing state. This is not a substitute for server authorization.
 

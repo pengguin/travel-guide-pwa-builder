@@ -13,11 +13,11 @@ const root = path.resolve(__dirname, '..');
   try {
     fs.mkdirSync(path.join(root, 'docs/images'), { recursive: true });
     for (const lang of ['zh', 'en']) {
-      for (const [shot, height] of [['chat',1000], ['home',1000], ['map',900], ['logistics',1000]]) {
+      for (const [shot, height] of [['chat',1000], ['home',1000], ['map',900], ['logistics',1000], ['interaction',1000]]) {
         const page = await browser.newPage({ viewport: { width:1600, height }, deviceScaleFactor:1 });
         // Illustrations are self-contained; do not load remote assets or profiles.
         await page.route(/^https?:/, route => route.abort());
-        const url = pathToFileURL(path.join(root, 'docs/demo-screenshots.html'));
+        const url = pathToFileURL(path.join(root, shot === 'interaction' ? 'docs/interaction-demo.html' : 'docs/demo-screenshots.html'));
         url.search = new URLSearchParams({lang, shot}).toString();
         await page.goto(url.href, { waitUntil:'load', timeout:15000 });
         await page.evaluate(() => document.fonts.ready);

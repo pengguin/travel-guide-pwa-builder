@@ -57,7 +57,7 @@ The following flat ZIP rules apply to portable static output. Sites publication 
 - Clock: before departure, D1, D2, final day, completed trip, local midnight/resume, timezone and DST; preview is not presented as today.
 - Navigation: every day has matching previous/next buttons, endpoints disabled; editor returns one level; sticky module tabs switch the intended panel without navigating Home; My routes gate private information only; back-to-top does not obscure inputs; guide details restore the originating list item or exact itinerary node and expose the next guide.
 - Repeatedly switch sibling day/guide/profile tabs and verify the viewport neither jumps to page top nor drifts upward. Test short final panels as well as long panels. Bottom previous/next should return to the sticky day frame rather than the document top.
-- Tools: summaries show live progress, all modules expand/collapse by keyboard/touch, data persists, print includes intended collapsed content, each relevant checklist has its own printable scope.
+- Tools: independent modules open their intended subpages and return to the hub; related detail accordions expand/collapse by keyboard/touch. Progress and data persist, and each checklist has its own printable scope.
 - Print: each print button fires once from a direct user gesture; no helper page attempts an asynchronous automatic print; the print target remains present until `afterprint`; itinerary and checklist previews are white with black text in light and dark screen modes; no live fixed navigation, blank pages or dark trailing rows remain.
 - Form settings: all font sizes affect selectors and controls; computed input text remains at least 16px; date controls fit phone width; safe-area color/inset is consistent on every route; function and appearance settings are compact, correctly labeled, and persist without login.
 - Theme matrix: light and dark modes across every primary route; selected/unselected/disabled/focus states; map legend/locate controls; floating back-to-top; danger/warning badges; inputs; bottom navigation; destination palettes. Text, icons and essential control boundaries meet the intended contrast targets.
@@ -70,6 +70,14 @@ The following flat ZIP rules apply to portable static output. Sites publication 
 - Offline repair: remove one current-cache asset in DevTools, run Recheck, confirm it is fetched and the timestamp changes; repeat when the release ID is already current and when a waiting worker exists.
 - Verify public source/build/GitHub payload contains no private records, seed data, screenshots, codes or account/deployment credentials. See `privacy-and-publishing.md`.
 - Record the human version, unique build/release ID, service-worker cache name, commit and hosted version. Confirm a maintenance release is detectable even when the human version intentionally does not change, and preserve a tested rollback baseline before broad refactors.
+
+## Interaction and offline identity regressions
+
+Use the scenario tables in [interaction-architecture.md](interaction-architecture.md) and [offline-identity.md](offline-identity.md). Include downward pull at the document top, compact return headers, short/long panel switches, and every public packing entry. A normal positive-scroll test does not cover iOS overscroll. Mocked viewport events can exercise guards but cannot prove browser compositor behavior.
+
+For personal mode, distinguish first login, valid offline restart, session-only expiry, local grant expiry, confirmed revocation, account switch and delayed responses after logout. Test each with synthetic identities. State whether authorization evidence uses a mock API, an isolated real server or the deployed backend.
+
+After publication, read back the release manifest and check the complete deployed public asset set when the project supplies digests. If a transient error is retried, rerun the complete set before reporting a clean result. Update only root package version fields; never globally replace matching dependency version strings in lockfiles. Keep a rollback baseline, but do not roll back into a known privacy defect.
 
 ## Evidence standard
 

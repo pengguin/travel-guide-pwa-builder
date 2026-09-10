@@ -24,11 +24,11 @@ Never repair a mature guide by regenerating it from the currently installed skil
 
 ## Application-shell invariants
 
-- Apply each safe-area inset exactly once through the shell. Sticky sub-navigation uses the shell's computed top offset; fixed bottom or side navigation owns its corresponding inset.
-- Give the bottom/side primary navigation an explicit layer. Content, map panes, legends, floating controls and back-to-top controls stay below it.
+- Assign each safe-area inset to an explicit owner for each shell variant. A compact sticky return bar still needs a top-inset owner when the full header is absent. Do not double-count an inset across body/header/page. Sticky sub-navigation uses the resolved shell offset; primary navigation owns its bottom or side inset.
+- Give the bottom/side primary navigation an explicit layer. Content, map panes, legends, floating controls and back-to-top controls stay below it. Prefer a stable CSS viewport anchor. Do not compensate document scrolling or negative overscroll with JavaScript offsets: visual-viewport offsets during iOS bounce can move an otherwise fixed bar. If keyboard behavior needs a separate policy, test it independently. Check transformed/filtered ancestors that can change the fixed containing block.
 - Use semantic layout breakpoints. Portrait uses a fixed hand-friendly map height; landscape may use an equal-height map/list workspace and a vertical primary navigation.
 - Reduce landscape header and page gutters. Use two columns for operational pairs such as map/list, summary/deadline, or form/navigation when it improves scan speed.
-- Centralize header, card, button, selected, disabled, warning, print and dark-mode tokens. Do not repair contrast with isolated page selectors.
+- Centralize header, card, button, selected, disabled, warning, print and dark-mode tokens. Use shared stack/grid gaps for module spacing, with min-width: 0 and wrapping for long deadline labels and form fields. Audit every consumer after changing a shared primitive, including compact headers and short pages. Do not repair contrast or spacing with accumulating page selectors.
 - Keep back-to-top controls visually subordinate: transparent or translucent, borderless, safe-area aware and clear of primary navigation.
 
 ## Route and return-state invariants

@@ -2,7 +2,7 @@
 name: travel-guide-pwa-builder
 description: Build or update a mobile travel guide PWA or travel website, from a rough trip idea or an existing itinerary. Use for an explicitly requested website/PWA deliverable; not ordinary travel advice, PDF-only work, or a single-file HTML request.
 metadata:
-  version: "2.4.0"
+  version: "2.5.0"
 ---
 
 # Travel Guide PWA Builder
@@ -32,7 +32,8 @@ For an existing guide, the live project's normalized records, routes, styles, te
 - Mobile layout, home state, forms, maps, navigation or tools: [mobile-experience.md](references/mobile-experience.md).
 - Field execution, deadlines, daily-page deduplication, transfers and next-day preparation: [field-execution.md](references/field-execution.md).
 - Accounts, access codes, ticket/booking uploads, personal editing or sync: [member-data.md](references/member-data.md), then the official Sites authentication and storage references.
-- Offline or startup work: [pwa-offline.md](references/pwa-offline.md).
+- Offline or startup work: [pwa-offline.md](references/pwa-offline.md). For previously authorized personal reading, also read [offline-identity.md](references/offline-identity.md).
+- Tools/My reorganization, editing entry points or repeated layout regressions: [interaction-architecture.md](references/interaction-architecture.md).
 - New destination palette: [destination-theming.md](references/destination-theming.md).
 - Reusable skill/GitHub handoff: [privacy-and-publishing.md](references/privacy-and-publishing.md).
 - One-sentence idea, incomplete itinerary, or route planning: [planning-mode.md](references/planning-mode.md), then [research-and-risk.md](references/research-and-risk.md).
@@ -90,10 +91,10 @@ Recommended sections:
 4. Transport: fixed tickets, unbooked segments, transfer logic, booking deadlines, alternatives.
 5. Stay and food: shortlists tied to neighborhood and day, not generic city dumps.
 6. Guides: entry, registration, money, communications, equipment, health and safety.
-7. Tools: collapsed, labeled modules for checklists, budget, emergency details, preferences and calendar; show useful progress in summaries rather than a long expanded page.
-8. My (when accounts are requested): sign-in, personal tickets, packing, stays, sync and role-appropriate member management. Keep public reading available when the user requests a public guide.
+7. Tools: reusable field tasks such as checklists, budget, emergency details and calendar. Use a navigation hub for independent modules; use accordions for related details within a module. Show useful progress without duplicating editors.
+8. My (when accounts are requested): personal records, account/sync state and role-appropriate member management. Edit tickets and stays at their own collection, rather than through a second generic profile editor. Generic packing remains discoverable without login; personal gear requires authorized access.
 
-Place settings under My even for guests. Separate them into compact **Function settings** (updates, offline state, map provider, exports) and **Appearance settings** (font size, color mode, destination palette, visual style). Do not advertise unimplemented visual systems as selectable features.
+For a guide with My, make settings reachable there for guests too. Group offline/maps/updates and display/color controls by purpose; use the same names on entry buttons and destination pages. Avoid a settings wrapper that adds no useful choice. Keep account status in the account section and give headers one consistent hierarchy. Menu counts, header composition, palettes and visual frameworks are product choices, not fixed skill requirements. Do not advertise unimplemented visual systems as selectable features.
 
 On long mobile sections, use a compact sticky sub-navigation for the current day or module. It must remain below the shared safe-area inset and must switch real in-page panels without accidentally navigating to Home. In landscape, reduce decorative header depth and reorganize operational content into columns; do not merely stretch portrait cards across the viewport. A right-side primary navigation is appropriate when it materially increases vertical working space.
 
@@ -128,7 +129,7 @@ Keep presentation components generic and itinerary content in data. Update coupl
 ### Cold start and offline invariants
 
 - Render a local App Shell or meaningful launch shell before framework hydration or route chunks finish. Do not use a loading animation to hide an empty root.
-- Bundle only public itinerary, generic transport/stay/packing notes, emergency information and public media. Core public reading must not wait for an API, remote font, map tile, or weather request. Private tickets, booked hotels and attachments must be fetched after server authorization, then optionally stored in an isolated per-member offline store; never put them in public assets or a shared precache.
+- Bundle only public itinerary, generic transport/stay/packing notes, emergency information and public media. Core public reading must not wait for an API, remote font, map tile, or weather request. Private tickets, booked hotels and attachments must be fetched after server authorization, then optionally stored in an isolated per-member offline store; never put them in public assets or a shared precache. On later launches, valid prior offline access must not depend on successful network revalidation. Keep first login, connectivity, server session and local offline-read permission distinct; apply the explicit expiry/revocation policy in [offline-identity.md](references/offline-identity.md).
 - Register the service worker after the first render; registration and activation must not block the App Shell.
 - Precache every core HTML/CSS/JS chunk, local image, icon, manifest, and offline fallback. If chunks are discovered only after build, generate the precache list from the final build output.
 - Account for `Vary` on verified public static assets only. Never ignore identity/cookie variation on private responses or cache authentication endpoints.

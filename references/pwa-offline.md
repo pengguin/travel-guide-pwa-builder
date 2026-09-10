@@ -24,7 +24,7 @@ Precache everything needed to read the guide:
 - manifest, icons, touch icon, and local core images;
 - public itinerary, generic transfers/stay/packing notes, emergency information and public sources.
 
-Private booked tickets, hotel confirmations, attachments and personal equipment must not be in the public bundle, HTML, service-worker precache or shared runtime cache. Fetch them only after server authorization, optionally store them in a separate member-scoped offline store, and implement logout, expiry and account-switch handling as specified in `member-data.md`. First authentication/private download requires a network connection. Do not claim instantaneous remote revocation of an already disconnected device.
+Private booked tickets, hotel confirmations, attachments and personal equipment must not be in the public bundle, HTML, service-worker precache or shared runtime cache. Fetch them only after server authorization, optionally store them in a separate member-scoped offline store, and implement logout, expiry and account-switch handling as specified in `member-data.md`. First authentication/private download requires a network connection. Later offline reading with a valid prior grant must not wait for a network check; see [offline-identity.md](offline-identity.md). Do not claim instantaneous remote revocation of an already disconnected device.
 
 Runtime-cache explicitly allowlisted public assets only. Same-origin does not mean public: never blanket-cache API, auth, member or attachment routes. Optional map tiles require provider permission and bounded storage. Remote tiles, weather, external navigation and live prices are not part of core startup; show an explicit offline state inside those modules.
 
