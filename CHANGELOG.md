@@ -2,6 +2,20 @@
 
 All notable changes to this skill are documented here. This project uses semantic versioning. Version numbers describe the skill package, not a generated travel website.
 
+## [2.5.1] - 2026-09-11
+
+### Documentation
+
+- Replaced five Chinese/English image pairs with detailed portrait-phone compositions and a ChatGPT-style fictional planning conversation.
+- Added a sixth pair showing all six primary pages, between the home and map illustrations.
+- Added editable shared artwork, complete Chinese text mapping, an isolated renderer and translation/layout checks. Navigation icons, ticket checkboxes and selected states now match across the bilingual set.
+- Disclosed the generated fictional alpine photo, its prompt and the distinction between illustrative UI and runtime evidence.
+- Updated both full READMEs and release/install links. Starter code, audit logic and production guide are unchanged.
+
+### 中文摘要
+
+更新六组中英图文：规划对话、随行首页、一级页面总览、互动地图、工具与票务、食宿安排。公开可重现的图源与来源说明；本版不修改起步项目功能或个人路书网站。
+
 ## [2.5.0] - 2026-09-10
 
 ### Added

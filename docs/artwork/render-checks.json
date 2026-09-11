@@ -1,0 +1,168 @@
+[
+  {
+    "name": "chat",
+    "lang": "en",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 0,
+    "navIcons": 0,
+    "untranslated": [],
+    "contentClearance": []
+  },
+  {
+    "name": "home",
+    "lang": "en",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 1,
+    "navIcons": 6,
+    "untranslated": [],
+    "contentClearance": [
+      32
+    ]
+  },
+  {
+    "name": "overview",
+    "lang": "en",
+    "width": 2400,
+    "height": 1200,
+    "brokenImages": 0,
+    "phones": 6,
+    "navIcons": 36,
+    "untranslated": [],
+    "contentClearance": [
+      26,
+      29,
+      16,
+      18,
+      233,
+      125
+    ]
+  },
+  {
+    "name": "map",
+    "lang": "en",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 1,
+    "navIcons": 6,
+    "untranslated": [],
+    "contentClearance": [
+      20
+    ]
+  },
+  {
+    "name": "interaction",
+    "lang": "en",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 2,
+    "navIcons": 12,
+    "untranslated": [],
+    "contentClearance": [
+      288,
+      23
+    ]
+  },
+  {
+    "name": "logistics",
+    "lang": "en",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 2,
+    "navIcons": 12,
+    "untranslated": [],
+    "contentClearance": [
+      21,
+      28
+    ]
+  },
+  {
+    "name": "chat",
+    "lang": "zh",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 0,
+    "navIcons": 0,
+    "untranslated": [],
+    "contentClearance": []
+  },
+  {
+    "name": "home",
+    "lang": "zh",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 1,
+    "navIcons": 6,
+    "untranslated": [],
+    "contentClearance": [
+      26
+    ]
+  },
+  {
+    "name": "overview",
+    "lang": "zh",
+    "width": 2400,
+    "height": 1200,
+    "brokenImages": 0,
+    "phones": 6,
+    "navIcons": 36,
+    "untranslated": [],
+    "contentClearance": [
+      21,
+      38,
+      23,
+      24,
+      233,
+      125
+    ]
+  },
+  {
+    "name": "map",
+    "lang": "zh",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 1,
+    "navIcons": 6,
+    "untranslated": [],
+    "contentClearance": [
+      28
+    ]
+  },
+  {
+    "name": "interaction",
+    "lang": "zh",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 2,
+    "navIcons": 12,
+    "untranslated": [],
+    "contentClearance": [
+      288,
+      12
+    ]
+  },
+  {
+    "name": "logistics",
+    "lang": "zh",
+    "width": 1800,
+    "height": 1120,
+    "brokenImages": 0,
+    "phones": 2,
+    "navIcons": 12,
+    "untranslated": [],
+    "contentClearance": [
+      22,
+      44
+    ]
+  }
+]

@@ -1,6 +1,6 @@
 # 旅行路书 PWA 构建技能
 
-当前版本：**2.5.0**
+当前版本：**2.5.1**
 
 把一句旅行想法、已经确认的行程，或一套正在使用的路书，转成适合手机现场执行、可离线阅读、能够持续更新的旅行 PWA。技能支持低交互规划、固定行程落地、既有站点迭代，以及通过 ChatGPT Sites 发布。
 
@@ -12,9 +12,9 @@
 
 > 使用 `$travel-guide-pwa-builder`：我计划今年十一自驾 7 天，想看海岸、古镇和一段轻徒步。请帮我规划，并制作可以离线使用的手机路书。
 
-以下图片均为自包含 HTML 渲染的虚构界面示意，不是 Codex 或实际路书截图；详见[图片来源](docs/SCREENSHOTS.md)。
+以下六组中英图片为浏览器渲染的虚构界面示意。首图采用 ChatGPT 风格展示规划对话，本机技能仍在 Codex 中调用；手机画面展示交互设计，不是已部署应用或起步项目功能的验收证据。详见[图片来源](docs/SCREENSHOTS.md)。
 
-![虚构对话中的技能调用与最小化规划输入](docs/images/chat-zh.png)
+![ChatGPT 风格的虚构旅行规划对话](docs/images/chat-zh.png)
 
 规划模式最多进行五个紧凑的决策阶段；已经回答的内容自动跳过。技能先核查可能推翻路线的关键事实，再交付可用初版，不会在生成路书之前要求用户写出完整日程。
 
@@ -51,7 +51,9 @@
 - 可选的公开路书与私人票务、住宿、装备、成员资料分层；
 - 构建、隐私、离线、移动端和发布检查，以及剩余人工确认项。
 
-![现场首页把下一步、硬时限与失败分枝放在首屏](docs/images/home-zh.png)
+![随行首页集中显示当天路线、下一步和检票时限](docs/images/home-zh.png)
+
+![六个一级页面：首页、行程、地图、指南、工具、我的](docs/images/overview-zh.png)
 
 ## 信息架构与使用技巧
 
@@ -64,7 +66,7 @@
 - “更新应用”更新页面、代码和离线资源；“同步数据”只处理当前授权成员的私人记录。
 - 公开可分享的截图和导出图不包含姓名、订单号、价格、票据或私人备注。
 
-![横屏地图、点位清单与等高控件共同形成现场工作区](docs/images/map-zh.png)
+![竖屏地图中的日期筛选、路线筛选与有序点位清单](docs/images/map-zh.png)
 
 ## 本机开发环境与网络依赖
 
@@ -83,7 +85,7 @@
 ## 安装与调用
 
 ```bash
-git clone --branch v2.5.0 https://github.com/pengguin/travel-guide-pwa-builder.git \
+git clone --branch v2.5.1 https://github.com/pengguin/travel-guide-pwa-builder.git \
   ~/.codex/skills/travel-guide-pwa-builder
 ```
 
@@ -128,7 +130,7 @@ python3 scripts/audit_travel_guide.py /path/to/guide --release
 ---
 
 
-## 2.5.0：离线身份与一致交互
+## 离线身份与一致交互
 
 - **离线读取不依赖每次联网成功。** 首次登录和私人资料下载仍须授权；以后用有效的本机离线授权立即读取，将断网、会话过期、成员撤销和主动退出分别处理。
 - **工具与我的按任务组织。** 独立工具进入二级页，相关详情可在页内展开；票务、住宿在各自清单直接编辑，公共行李入口不混入私人装备。
@@ -139,7 +141,7 @@ python3 scripts/audit_travel_guide.py /path/to/guide --release
 
 详见[交互架构](references/interaction-architecture.md)、[离线身份](references/offline-identity.md)及[验收与发布](references/qa-and-release.md)。这些是可复用的开发与验收约定；**静态起步模板没有新增登录、成员后端或个人离线授权实现**。本版不规定按钮数量、Material 等视觉框架或目的地配色，也不改变参考网站。
 
-更新已安装技能前，先备份并核对本机改动；不要把克隆命令用于覆盖已有目录。可从 [v2.5.0 Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.5.0) 下载 ZIP 与 SHA-256，验证后替换该技能目录。GitHub 标签与安装文件应来自同一快照。
+更新已安装技能前，先备份并核对本机改动；不要把克隆命令用于覆盖已有目录。可从 [v2.5.1 Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.5.1) 下载 ZIP 与 SHA-256，验证后替换该技能目录。GitHub 标签与安装文件应来自同一快照。
 
 ## 行程更新与能力边界
 
@@ -169,4 +171,4 @@ python3 scripts/check_docs.py
 
 `--release`默认只审部署后的公开资源；`--source`另查源码，可能包括合法的私有服务端记录。检查结果不代替人工隐私审查或浏览器/真机验收。
 
-发布说明：[CHANGELOG](CHANGELOG.md) · [验证与打包流程](docs/releases/2.5.0.md) · [截图来源](docs/SCREENSHOTS.md) · [参与维护](CONTRIBUTING.md) · [GitHub Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.5.0)。下载ZIP与SHA-256文件核对；解压后的技能目录应为`travel-guide-pwa-builder`。
+发布说明：[CHANGELOG](CHANGELOG.md) · [验证与打包流程](docs/releases/2.5.1.md) · [截图来源](docs/SCREENSHOTS.md) · [参与维护](CONTRIBUTING.md) · [GitHub Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.5.1)。下载ZIP与SHA-256文件核对；解压后的技能目录应为`travel-guide-pwa-builder`。

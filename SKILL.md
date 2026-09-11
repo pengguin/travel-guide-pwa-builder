@@ -2,7 +2,7 @@
 name: travel-guide-pwa-builder
 description: Build or update a mobile travel guide PWA or travel website, from a rough trip idea or an existing itinerary. Use for an explicitly requested website/PWA deliverable; not ordinary travel advice, PDF-only work, or a single-file HTML request.
 metadata:
-  version: "2.5.0"
+  version: "2.5.1"
 ---
 
 # Travel Guide PWA Builder
@@ -116,7 +116,7 @@ When using the standalone starter, pass `--theme auto` or choose a named family 
 - Store source, creator/license status, and alt text for every externally sourced image.
 - Do not commit user screenshots, boarding passes, faces, booking references, personal cloud paths, or private images unless the user explicitly asks and understands the publication scope.
 - Use generated or license-compatible neutral artwork for app icons. Verify maskable icons at common mobile crops.
-- Documentation screenshots must show the real interaction model. The first planning screenshot begins in the Codex conversation that invokes the skill, not inside a PWA that does not exist yet. When documentation is bilingual, capture strict Chinese/English counterparts with the same layout and synthetic content.
+- Documentation screenshots must show the real interaction model. Show initial planning as a conversation before the PWA exists. A ChatGPT-style illustration is acceptable when requested, but label its fictional transcript and clarify that this local skill runs in Codex. When documentation is bilingual, capture strict Chinese/English counterparts with the same layout and synthetic content.
 
 ## Budget model
 
