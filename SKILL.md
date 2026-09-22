@@ -2,7 +2,7 @@
 name: travel-guide-pwa-builder
 description: Build or update a mobile travel guide PWA or travel website, from a rough trip idea or an existing itinerary. Use for an explicitly requested website/PWA deliverable; not ordinary travel advice, PDF-only work, or a single-file HTML request.
 metadata:
-  version: "2.5.1"
+  version: "2.6.0"
 ---
 
 # Travel Guide PWA Builder
@@ -34,6 +34,8 @@ For an existing guide, the live project's normalized records, routes, styles, te
 - Accounts, access codes, ticket/booking uploads, personal editing or sync: [member-data.md](references/member-data.md), then the official Sites authentication and storage references.
 - Offline or startup work: [pwa-offline.md](references/pwa-offline.md). For previously authorized personal reading, also read [offline-identity.md](references/offline-identity.md).
 - Tools/My reorganization, editing entry points or repeated layout regressions: [interaction-architecture.md](references/interaction-architecture.md).
+- Day switching, scroll restoration, manual themes or app-resume defects: [mobile-state-and-resume.md](references/mobile-state-and-resume.md).
+- Weather forecasts or daily clothing: [weather-and-clothing.md](references/weather-and-clothing.md).
 - New destination palette: [destination-theming.md](references/destination-theming.md).
 - Reusable skill/GitHub handoff: [privacy-and-publishing.md](references/privacy-and-publishing.md).
 - One-sentence idea, incomplete itinerary, or route planning: [planning-mode.md](references/planning-mode.md), then [research-and-risk.md](references/research-and-risk.md).
@@ -98,7 +100,7 @@ For a guide with My, make settings reachable there for guests too. Group offline
 
 On long mobile sections, use a compact sticky sub-navigation for the current day or module. It must remain below the shared safe-area inset and must switch real in-page panels without accidentally navigating to Home. In landscape, reduce decorative header depth and reorganize operational content into columns; do not merely stretch portrait cards across the viewport. A right-side primary navigation is appropriate when it materially increases vertical working space.
 
-For sibling day/module switches, preserve the current reading frame; bottom previous/next may return to the sticky frame anchor but not the document top. Keep one scroll owner per transition. For editable ticket/stay collections, use compact saved summaries with an explicit Details → inline edit → Save/Cancel flow, and keep selection hit areas separate from editing actions.
+For sibling day/module switches, apply the chosen reading-position policy consistently across taps and swipes. Preserve the reading frame when supported; if unreliable on the target device, offer the user's accepted top-of-day fallback and label experimental restoration. Keep one scroll owner per transition. For editable ticket/stay collections, use compact saved summaries with an explicit Details → inline edit → Save/Cancel flow, and keep selection hit areas separate from editing actions.
 
 Use large type, strong hierarchy, generous spacing, restrained colors, and complete images. Put secondary detail behind expandable sections. Do not turn the main view into a dense article or thin-line table.
 

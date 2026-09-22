@@ -56,7 +56,7 @@ The following flat ZIP rules apply to portable static output. Sites publication 
 
 - Clock: before departure, D1, D2, final day, completed trip, local midnight/resume, timezone and DST; preview is not presented as today.
 - Navigation: every day has matching previous/next buttons, endpoints disabled; editor returns one level; sticky module tabs switch the intended panel without navigating Home; My routes gate private information only; back-to-top does not obscure inputs; guide details restore the originating list item or exact itinerary node and expose the next guide.
-- Repeatedly switch sibling day/guide/profile tabs and verify the viewport neither jumps to page top nor drifts upward. Test short final panels as well as long panels. Bottom previous/next should return to the sticky day frame rather than the document top.
+- Repeatedly switch sibling day/guide/profile tabs using real buttons and swipes, validating the selected top/restoration policy. Test short/long panels, interruptions and both directions. Use [mobile-state-and-resume.md](mobile-state-and-resume.md); do not treat experimental remembered offsets as confirmed stable.
 - Tools: independent modules open their intended subpages and return to the hub; related detail accordions expand/collapse by keyboard/touch. Progress and data persist, and each checklist has its own printable scope.
 - Print: each print button fires once from a direct user gesture; no helper page attempts an asynchronous automatic print; the print target remains present until `afterprint`; itinerary and checklist previews are white with black text in light and dark screen modes; no live fixed navigation, blank pages or dark trailing rows remain.
 - Form settings: all font sizes affect selectors and controls; computed input text remains at least 16px; date controls fit phone width; safe-area color/inset is consistent on every route; function and appearance settings are compact, correctly labeled, and persist without login.
@@ -77,7 +77,7 @@ Use the scenario tables in [interaction-architecture.md](interaction-architectur
 
 For personal mode, distinguish first login, valid offline restart, session-only expiry, local grant expiry, confirmed revocation, account switch and delayed responses after logout. Test each with synthetic identities. State whether authorization evidence uses a mock API, an isolated real server or the deployed backend.
 
-After publication, read back the release manifest and check the complete deployed public asset set when the project supplies digests. If a transient error is retried, rerun the complete set before reporting a clean result. Update only root package version fields; never globally replace matching dependency version strings in lockfiles. Keep a rollback baseline, but do not roll back into a known privacy defect.
+Follow the hosting provider's current completion contract. When an additional deployed-asset audit is requested and permitted, read back the release manifest and check the complete public asset set when digests are supplied. If a transient error is retried, rerun the complete set before reporting a clean result. Update only root package version fields; never globally replace matching dependency version strings in lockfiles. Keep a rollback baseline, but do not roll back into a known privacy defect.
 
 ## Evidence standard
 

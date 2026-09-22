@@ -54,6 +54,8 @@ Never repair a mature guide by regenerating it from the currently installed skil
 - In `@media print`, explicitly set the page, body, target, cards, rows, headings, links, table cells and form text to white backgrounds and black text. Hide fixed navigation and floating controls. Elements hidden with visibility alone still occupy layout space; check page count and remove hidden ancestors from print layout so blank trailing pages do not remain.
 - Test each print target separately in light and dark screen modes. A successful itinerary print does not prove the checklist or packing target.
 
+For an explicit downloadable PDF, generate real text with the required embedded font and Unicode mapping; a screenshot/canvas-only PDF cannot satisfy selectable or searchable text. Test text extraction and rendered pagination separately. Returning from print/preview must use the actual invoking export/list route, not an unrelated checklist editor. A successful desktop download does not prove the iPhone system print dialog works.
+
 ## Collection-editing invariants
 
 - Use one interaction grammar for editable tickets, stays and similar collections: compact saved summary, explicit Details, inline editor, Save/Cancel, then collapse after a successful save.

@@ -25,9 +25,11 @@ Each saved item has one summary and an inline Details/Edit region. Add creates o
 - Define page header variants, content widths, stack gaps, card padding, control heights, typography and safe-area ownership together. Full and compact headers must each reserve the status-bar inset; a return link should not create an accidental second hero header.
 - Header height and hierarchy should be consistent for equivalent page levels regardless of login state. A compact detail return bar can remain sticky, but its controls must stay below the safe area, clear of content and keyboard focus.
 - Use a shared stack or grid for sibling modules so newly inserted notices receive the same spacing. Long deadline text should wrap into a readable row/column; give flexible children min-width: 0 and test unknown-time labels as well as short clock times.
-- Keep one scroll owner per transition: top-level navigation, sibling panel switch, previous/next day and return-to-item have distinct intents. A sibling switch should preserve the sticky reading frame rather than combining a global scroll-to-top with a second local adjustment.
+- Keep one scroll owner per transition: top-level navigation, sibling panel switch, previous/next day and return-to-item have distinct intents. A sibling switch should follow the chosen reading-position policy, without combining a global scroll reset with a second local adjustment.
 - Bring an active day chip fully inside its horizontal rail, including direct links and previous/next navigation. Adjust that rail without scrolling the whole document. On short panels, use a deliberate minimum working area only when necessary to preserve the frame; do not add arbitrary screenfuls of blank padding.
 - Fixed primary navigation should have a stable CSS viewport anchor and no document-scroll compensation. Test negative overscroll, browser chrome and keyboard separately. Inspect containing blocks before introducing visual-viewport offsets.
+
+Disclosure triangles should rotate around a fixed center in a reserved icon box; switching Unicode glyphs with different metrics can shift the label. Give a card header/content boundary one divider owner, with shared horizontal inset, so component and global rules cannot draw two lines. Weather, account tiles, checkboxes and app pickers use the same semantic heading/content/action tokens across palettes and light/dark modes; adding a new module must not bypass the hierarchy.
 
 ## Content without duplication
 
@@ -43,7 +45,7 @@ An overview image should concentrate on date and actual route/activity. Align da
 | --- | --- | --- |
 | Header/nav | Every header variant; guest/member; narrow/wide; large text | Consistent hierarchy, visible return control, no overlap or overflow |
 | Scroll | Top downward pull, normal long scroll, end bounce, keyboard, rotation | Primary navigation remains at its intended viewport anchor |
-| Day/panel rail | First/middle/last day, direct URL, previous/next, long-to-short panel | Active chip fully visible; intended reading frame preserved |
+| Day/panel rail | First/middle/last day, direct URL, previous/next, long-to-short panel | Active chip fully visible; chosen top/restoration policy respected |
 | Tickets/stays | Add, select, Details, Cancel, Save, long editor collapse | Separate selection/edit actions, one draft, stable return anchor |
 | Public/private content | Every day and every packing entry before/after login | No private guest fallback, no lost essential public steps or duplicate Plan B |
 | Tools/settings | Each hub tile, subpage return, accordion inside a task | Correct parent, matched labels, persistent state and consistent spacing |

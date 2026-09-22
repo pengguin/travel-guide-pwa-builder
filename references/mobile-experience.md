@@ -23,7 +23,7 @@ Keep the field-use home to today's city, three actions, next transfer and next h
 
 ## Consistent typography and safe areas
 
-Use one shared opaque header/safe-area background token on all routes, no mismatched gradient at the status bar. Apply top inset once; check that standalone padding is not doubled by body, header and page. Account for bottom inset and keep keyboard focus visible.
+Use one semantic viewport-background source on all routes. Do not require a separate header/safe-area mask; preserve an existing intentional glass design and distinguish system tint from webpage gradients. Apply top inset once; check that standalone padding is not doubled by body, header and page. Account for bottom inset and keep keyboard focus visible.
 
 Treat light/dark mode as a semantic system, not a page-level filter. Define tokens for headings, selected backgrounds/text/borders, inputs, floating controls, disabled states, warnings, and map overlays. Every selected control needs a visible shape/boundary as well as a color change. Fixed controls over light map tiles may intentionally use a light surface in dark mode, but their text and borders must stay readable.
 
@@ -43,13 +43,13 @@ Never use a CSS rotation transform on a live map to implement manual landscape. 
 
 Run fullscreen and orientation-lock attempts independently: one rejected API must not skip the other. On iOS or another platform that cannot override the system orientation lock, label the fallback as a focus/fullscreen map and explain that physical rotation still requires the device setting.
 
-Sticky day or section tabs should switch content inside the existing reading frame. Distinguish three navigation intents in route state: a new top-level route goes to top, a sibling tab/day preserves the viewport, and bottom previous/next returns to the sticky frame anchor. Never combine a global scroll reset with a component-level `scrollIntoView` for the same transition; repeated switching will drift.
+Sticky day or section tabs should use one consistent transition contract. Distinguish top-level navigation, sibling day/tab selection and detail return; apply the user's chosen top/restoration policy for each. Never combine a global scroll reset with a component-level `scrollIntoView` for the same transition; repeated switching will drift.
 
 Treat map tiles as a replaceable online provider. Keep provider attribution, offer a second provider where appropriate, and preserve the normalized point list when tiles fail. Do not claim that a globally sourced map is uniformly reachable in every region or that tiles are offline unless that exact cache is licensed, bounded and tested.
 
 Order guide entries by earliest itinerary appearance, then by explicit within-day sequence; do not rely on source-file order or alphabetical order. Keep sorting explanations out of the main view unless they help the traveler make a decision. Preserve search/filter state and the exact guide-card scroll position when returning from detail. A detail page should provide both return-to-list and next-guide controls so the user can browse continuously.
 
-Use one map-link resolver for all 'view on map' links, including deep guides and booked stays. Apply the user's chosen provider and validated latitude/longitude order. Consult current official provider link documentation and test a real destination. Opening 2GIS or another app alone does not prove that a pin/navigation target was passed. Prefer documented web/universal links with fallback; expose copy address/coordinates when app links or regional coverage fail. Do not claim offline turn-by-turn navigation from cached website content.
+Use one map-link resolver for all 'view on map' links, including deep guides and booked stays. Apply the user's chosen provider and validated latitude/longitude order. Consult current official provider link documentation and test a real destination. Opening 2GIS or another app alone does not prove that a pin/navigation target was passed. Prefer a documented app-opening link (scheme or universal link as the provider supports), with a usable fallback; expose copy address/coordinates when app links or regional coverage fail. A place-view action should not silently force driving directions. Resolve the actual place/address rather than an activity title such as “hotel check-in”; omit location actions when no destination is identified. Shared pickers must respect the user's chosen providers/order and any country-specific preference across all entry points. Do not claim offline turn-by-turn navigation from cached website content.
 
 ## Checklists and planning deadlines
 
@@ -60,6 +60,8 @@ When requested, model reverse-planning tasks with a due date or offset from depa
 Printing must be a direct consequence of the user's click. Give itinerary, preparation checklist and packing checklist distinct print targets. In print media, explicitly set the page and every target surface/text/table cell to white and black; hiding screen elements alone is insufficient because dark theme backgrounds may still paint.
 
 Prefer same-page printing on iOS: synchronously set the print target, call `window.print()` in the click handler, and clear the target on `afterprint`. Do not open a new page and automatically print it, and do not remove the print target on a short timeout; either can break the user-gesture chain or leave iOS with a blank preview.
+
+For scroll/animation and foreground-specific cases read [mobile-state-and-resume.md](mobile-state-and-resume.md). For requested weather and shared packing advice read [weather-and-clothing.md](weather-and-clothing.md).
 
 ## Test boundaries
 

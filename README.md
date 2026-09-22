@@ -1,10 +1,14 @@
 # 旅行路书 PWA 构建技能
 
-当前版本：**2.5.1**
+当前版本：**2.6.0**
 
 把一句旅行想法、已经确认的行程，或一套正在使用的路书，转成适合手机现场执行、可离线阅读、能够持续更新的旅行 PWA。技能支持低交互规划、固定行程落地、既有站点迭代，以及通过 ChatGPT Sites 发布。
 
 [English](README.en.md) · [双语总览](README.md) · [更新记录](CHANGELOG.md)
+
+## 2.6.0 维护指导
+
+补充切日偏好与动画中断、统一页面背景与 iOS 实机验证边界、行程日天气和折叠每日衣着、真实地点与地图应用操作、可复制文字 PDF 及增量更新反馈。这些是实现与验证约定，不代表静态起步模板已经增加上述功能；既有配图仍为设计示意。
 
 ## 从一句话开始
 
@@ -85,7 +89,7 @@
 ## 安装与调用
 
 ```bash
-git clone --branch v2.5.1 https://github.com/pengguin/travel-guide-pwa-builder.git \
+git clone --branch v2.6.0 https://github.com/pengguin/travel-guide-pwa-builder.git \
   ~/.codex/skills/travel-guide-pwa-builder
 ```
 
@@ -141,7 +145,7 @@ python3 scripts/audit_travel_guide.py /path/to/guide --release
 
 详见[交互架构](references/interaction-architecture.md)、[离线身份](references/offline-identity.md)及[验收与发布](references/qa-and-release.md)。这些是可复用的开发与验收约定；**静态起步模板没有新增登录、成员后端或个人离线授权实现**。本版不规定按钮数量、Material 等视觉框架或目的地配色，也不改变参考网站。
 
-更新已安装技能前，先备份并核对本机改动；不要把克隆命令用于覆盖已有目录。可从 [v2.5.1 Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.5.1) 下载 ZIP 与 SHA-256，验证后替换该技能目录。GitHub 标签与安装文件应来自同一快照。
+更新已安装技能前，先备份并核对本机改动；不要把克隆命令用于覆盖已有目录。可从 [v2.6.0 Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.6.0) 下载 ZIP 与 SHA-256，验证后替换该技能目录。GitHub 标签与安装文件应来自同一快照。
 
 ## 行程更新与能力边界
 
@@ -171,17 +175,21 @@ python3 scripts/check_docs.py
 
 `--release`默认只审部署后的公开资源；`--source`另查源码，可能包括合法的私有服务端记录。检查结果不代替人工隐私审查或浏览器/真机验收。
 
-发布说明：[CHANGELOG](CHANGELOG.md) · [验证与打包流程](docs/releases/2.5.1.md) · [截图来源](docs/SCREENSHOTS.md) · [参与维护](CONTRIBUTING.md) · [GitHub Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.5.1)。下载ZIP与SHA-256文件核对；解压后的技能目录应为`travel-guide-pwa-builder`。
+发布说明：[CHANGELOG](CHANGELOG.md) · [验证与打包流程](docs/releases/2.6.0.md) · [截图来源](docs/SCREENSHOTS.md) · [参与维护](CONTRIBUTING.md) · [GitHub Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.6.0)。下载ZIP与SHA-256文件核对；解压后的技能目录应为`travel-guide-pwa-builder`。
 
 ---
 
 # Travel Guide PWA Builder
 
-Current version: **2.5.1**
+Current version: **2.6.0**
 
 Turn a one-line trip idea, a substantially fixed itinerary, or an existing guide into a destination-themed, mobile-first travel PWA for field execution, offline reading, and controlled updates. The skill supports low-interaction planning, booked-itinerary delivery, existing-site iteration, and publishing through ChatGPT Sites.
 
 [中文](README.zh-CN.md) · [Bilingual overview](README.md) · [Changelog](CHANGELOG.md)
+
+## Maintenance guidance in 2.6.0
+
+Adds focused guidance for consistent day-switch preferences and interrupted animations, shared viewport appearance and honest iOS verification, trip-date weather and folded daily clothing, actual place/app actions, selectable-text PDFs and incremental-update feedback. These are implementation and verification contracts, not new runtime features in the static starter. Existing illustrations remain design examples.
 
 ## Start with one sentence
 
@@ -262,7 +270,7 @@ The skill can still deliver a local or portable public static PWA. A conceptual 
 ## Install and invoke
 
 ```bash
-git clone --branch v2.5.1 https://github.com/pengguin/travel-guide-pwa-builder.git \
+git clone --branch v2.6.0 https://github.com/pengguin/travel-guide-pwa-builder.git \
   ~/.codex/skills/travel-guide-pwa-builder
 ```
 
@@ -316,7 +324,7 @@ This repository contains no real traveler, itinerary, ticket, booking, access co
 
 See [interaction architecture](references/interaction-architecture.md), [offline identity](references/offline-identity.md) and [QA/release](references/qa-and-release.md). These are reusable development and acceptance contracts; **the static starter has no new login, member backend or personal offline-grant implementation**. This release does not prescribe menu counts, Material or another visual framework, destination palettes, or changes to a reference website.
 
-Before updating an installed skill, back it up and inspect local changes; do not clone over an existing directory. Download the ZIP and SHA-256 from the [v2.5.1 Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.5.1), verify them, then replace only this skill folder. The GitHub tag and installed files should identify the same snapshot.
+Before updating an installed skill, back it up and inspect local changes; do not clone over an existing directory. Download the ZIP and SHA-256 from the [v2.6.0 Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.6.0), verify them, then replace only this skill folder. The GitHub tag and installed files should identify the same snapshot.
 
 ## Itinerary updates and capability boundaries
 
@@ -346,4 +354,4 @@ python3 scripts/check_docs.py
 
 `--release` scans deployed public files by default. `--source` adds a source-tree review, which may include legitimate authorized server records. Neither replaces manual privacy review or browser/device acceptance.
 
-See the [changelog](CHANGELOG.md), [verification and packaging](docs/releases/2.5.1.md), [image provenance](docs/SCREENSHOTS.md), [contributing](CONTRIBUTING.md) and [GitHub Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.5.1). Verify the ZIP with its SHA-256 file; the extracted skill folder is `travel-guide-pwa-builder`.
+See the [changelog](CHANGELOG.md), [verification and packaging](docs/releases/2.6.0.md), [image provenance](docs/SCREENSHOTS.md), [contributing](CONTRIBUTING.md) and [GitHub Release](https://github.com/pengguin/travel-guide-pwa-builder/releases/tag/v2.6.0). Verify the ZIP with its SHA-256 file; the extracted skill folder is `travel-guide-pwa-builder`.

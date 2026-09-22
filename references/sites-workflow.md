@@ -27,7 +27,7 @@ For ChatGPT authentication, use current dispatch-owned helpers and top-level sig
 1. Separate public output from private records, attachments, local test databases and secrets before building. Inspect both public assets and source to be uploaded; a private server bundle is still source disclosure when pushed to a public GitHub repository.
 2. Complete content reconciliation and relevant tests. For server output, verify the Worker-compatible ESM entry with a callable default `fetch`; include inspected migrations when required. For static output, verify public entry HTML and offline assets.
 3. Follow the official source/version/archive sequence with current native tools. Keep credentials ephemeral, out of Git URLs/config, archives and logs. Use the official packaging helper rather than a generic ZIP command for a server-backed Site.
-4. Inspect existing Site access before deployment. Follow the official public/shared approval gate. A skill GitHub push is not a Site publication request.
+4. Inspect existing Site access before deployment and preserve its audience. Follow current official Sites authorization and native approval behavior without adding a redundant conversational confirmation. A skill GitHub push is not a request to change a reference Site.
 5. Wait for a successful deployment status, then hand off the exact returned URL. Do not invent project identifiers, versions, domains, or successful deployments.
 
 Browser preview/testing and image-generation behavior follow the official Sites skill. A skill-only maintenance task requires neither a new Site nor publishing a reference Site.

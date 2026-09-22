@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.6.0] - 2026-09-22
+
+- Add focused day-navigation/resume and weather/clothing references.
+- Distinguish native statusbar hypotheses from verified webpage defects; share viewport color ownership and cancel suspended motion.
+- Make scroll policy user-controlled, with explicit experimental fallback rather than mandatory viewport preservation.
+- Clarify real-place app actions, selectable-text PDF verification and actual incremental download progress.
+- Align Sites handoff guidance with the current official workflow.
+- Update paired READMEs; starter runtime and artwork unchanged.
+
+中文：补充手机切日、前后台主题、天气衣着、地点操作、文字 PDF 与增量更新约定；不将未验证的 iPhone 表现写成已解决。
+
 All notable changes to this skill are documented here. This project uses semantic versioning. Version numbers describe the skill package, not a generated travel website.
 
 ## [2.5.1] - 2026-09-11
