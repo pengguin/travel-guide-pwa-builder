@@ -79,6 +79,12 @@ For personal mode, distinguish first login, valid offline restart, session-only 
 
 Follow the hosting provider's current completion contract. When an additional deployed-asset audit is requested and permitted, read back the release manifest and check the complete public asset set when digests are supplied. If a transient error is retried, rerun the complete set before reporting a clean result. Update only root package version fields; never globally replace matching dependency version strings in lockfiles. Keep a rollback baseline, but do not roll back into a known privacy defect.
 
+## Shared visual primitives
+
+For separator repairs, expand representative nested modules, lists, definition lists and image details across their consumers; use the ownership cases in [interaction-architecture.md](interaction-architecture.md). Check first-row versus subsequent-row boundaries without removing card or form outlines. Test all supported palettes and modes. Record which routes and private-data fixtures were actually exercised instead of calling a partial route sample a whole-app acceptance.
+
+For adjustable navigation material, compare live controls and previews across intermediate slider values, both directions and selected states, using the same backdrop for samples. Check same-frame computed styles as well as screenshots. Verify update feedback across entry, manual check, route changes and active download with the ownership cases in [pwa-offline.md](pwa-offline.md).
+
 ## Evidence standard
 
 A passing static build proves compilation only. Do not report browser, PWA, offline, or deployment behavior as verified unless each was tested. State untested areas plainly.

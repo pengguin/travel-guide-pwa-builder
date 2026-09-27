@@ -2,7 +2,7 @@
 name: travel-guide-pwa-builder
 description: Build or update a mobile travel guide PWA or travel website, from a rough trip idea or an existing itinerary. Use for an explicitly requested website/PWA deliverable; not ordinary travel advice, PDF-only work, or a single-file HTML request.
 metadata:
-  version: "2.6.0"
+  version: "2.6.1"
 ---
 
 # Travel Guide PWA Builder
@@ -33,7 +33,7 @@ For an existing guide, the live project's normalized records, routes, styles, te
 - Field execution, deadlines, daily-page deduplication, transfers and next-day preparation: [field-execution.md](references/field-execution.md).
 - Accounts, access codes, ticket/booking uploads, personal editing or sync: [member-data.md](references/member-data.md), then the official Sites authentication and storage references.
 - Offline or startup work: [pwa-offline.md](references/pwa-offline.md). For previously authorized personal reading, also read [offline-identity.md](references/offline-identity.md).
-- Tools/My reorganization, editing entry points or repeated layout regressions: [interaction-architecture.md](references/interaction-architecture.md).
+- Tools/My organization, divider ownership, navigation-material previews or repeated layout regressions: [interaction-architecture.md](references/interaction-architecture.md).
 - Day switching, scroll restoration, manual themes or app-resume defects: [mobile-state-and-resume.md](references/mobile-state-and-resume.md).
 - Weather forecasts or daily clothing: [weather-and-clothing.md](references/weather-and-clothing.md).
 - New destination palette: [destination-theming.md](references/destination-theming.md).

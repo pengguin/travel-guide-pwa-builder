@@ -29,7 +29,7 @@ Each saved item has one summary and an inline Details/Edit region. Add creates o
 - Bring an active day chip fully inside its horizontal rail, including direct links and previous/next navigation. Adjust that rail without scrolling the whole document. On short panels, use a deliberate minimum working area only when necessary to preserve the frame; do not add arbitrary screenfuls of blank padding.
 - Fixed primary navigation should have a stable CSS viewport anchor and no document-scroll compensation. Test negative overscroll, browser chrome and keyboard separately. Inspect containing blocks before introducing visual-viewport offsets.
 
-Disclosure triangles should rotate around a fixed center in a reserved icon box; switching Unicode glyphs with different metrics can shift the label. Give a card header/content boundary one divider owner, with shared horizontal inset, so component and global rules cannot draw two lines. Weather, account tiles, checkboxes and app pickers use the same semantic heading/content/action tokens across palettes and light/dark modes; adding a new module must not bypass the hierarchy.
+Disclosure triangles should rotate around a fixed center in a reserved icon box; switching Unicode glyphs with different metrics can shift the label. Use the separator contract below for card boundaries. Weather, account tiles, checkboxes and app pickers use the same semantic heading/content/action tokens across palettes and light/dark modes; adding a new module must not bypass the hierarchy.
 
 ## Content without duplication
 
@@ -51,3 +51,21 @@ An overview image should concentrate on date and actual route/activity. Align da
 | Tools/settings | Each hub tile, subpage return, accordion inside a task | Correct parent, matched labels, persistent state and consistent spacing |
 
 Test observed outcomes rather than asserting that a compensating formula returns its own expected value. Responsive screenshots and synthetic viewport events cannot establish installed-iPhone bounce or safe-area behavior; report physical-device acceptance separately.
+
+## Separator ownership
+
+Use one shared rule for each header/content boundary. Fixed module headers and expanded disclosure summaries should use the same semantic divider color, thickness, content inset and following gap. In a disclosure, the summary owns this separator only when expanded; its body must not add a second border, background rule or pseudo-element at the same boundary. A local component must not add another line to compensate for spacing.
+
+For an unboxed list directly below that boundary, row one has no leading divider; later siblings may have one inter-item divider. Keep independent card outlines, input borders and table grids: they express different boundaries and must not be removed by a blanket first-child reset. An action followed by an auxiliary disclosure normally needs shared spacing, not a separate rule above that disclosure. Keep these choices in reusable primitives or explicit layout roles, rather than accumulating page-name overrides.
+
+Regression example: an expanded “Equipment” module contains folded “Day A / Day B” rows. Check one line below the module summary, no extra line above Day A, one between Day A and Day B, and one below an expanded day's summary. Also test a definition list and an image as disclosure bodies; neither should duplicate the summary line. Inspect computed borders, background images and pseudo-elements together, then inspect the rendered result.
+
+## Navigation material and preview parity
+
+If transparency is adjustable, derive actual top/bottom navigation and its preview from the same surface and blur tokens, child selected-state layers and component structure. Change the background tint, not whole-control opacity: text and icons retain contrast. An opaque selected tab can conceal the slider response even when the outer navigation backgrounds match. Preserve explicit accessibility overrides such as reduced transparency or increased contrast.
+
+For a side-by-side comparison, use the same underlying image crop or neutral scene for both preview samples. Different scenery can look like different opacity. Preview overrides should only place controls in the sample; avoid importing live hide/show motion or introducing independent tint calculations. Verify intermediate values in both directions during actual input, comparing top, bottom and real navigation in the same frame. Include selected/unselected states and all offered palette/mode combinations. Stationary endpoint styles alone do not establish synchronized rendering; browser automation also does not establish an installed phone's compositor behavior.
+
+## Settings descriptions
+
+Match hub labels to destination titles. When users request a concise About section, retain one readable summary and put the detailed feature list behind a disclosure. Keep the update action ahead of secondary explanatory content when requested; do not turn one product's section names or ordering into a mandatory template. Bundle a public-safe changelog with offline content when offline access to it is promised, and keep it synchronized with the actual release.

@@ -93,3 +93,11 @@ The neutral static starter uses an explicit `addAll` list. It deletes a failed i
 ## Update feedback
 
 Distinguish the complete offline bundle from the changed-resource download. Calculate delta totals from the actual verified change set; do not label the full package size as incremental. Progress and completion use the same denominator and acknowledge failed/missing assets. After an authorized update has downloaded and passed integrity checks, activate and refresh once if that is the product contract; failure must preserve the last complete version and never show successful completion. An explicit updates page may own inline progress while other pages use a shared notice; avoid duplicate competing progress surfaces. Preserve checklist edits and open-state policy across refresh.
+
+## Update feedback belongs to its initiating context
+
+Model discovery, download/verification, activation and manual-check feedback separately. Merely opening an update screen does not justify a permanent “already current” message: show that result after an actual completed check, distinguish a matching version from complete offline resources, and keep transient results local to the requesting screen. Leaving that screen must not make its no-update/error message appear above another page's navigation. Clear or deliberately revalidate stale manual results on re-entry.
+
+Give update progress one visible owner. On an explicit update screen use its inline panel; elsewhere a shared progress notice may represent a real ongoing download. Route changes must not produce both surfaces at once or reclassify a manual no-update result as a global announcement. Preserve separate handling for newly discovered automatic update offers and actionable failures; suppressing all global update state would hide useful progress.
+
+Regression sequence: open without checking; check with no package; leave and return; then test an actual package and navigate while downloading. Verify absent idle success text, local check feedback, no cross-page leak, a single progress surface, and one activation/reload after verification. Use synthetic manifests and cache fixtures; mocked worker events are not deployed offline evidence.

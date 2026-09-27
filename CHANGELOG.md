@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.6.1] - 2026-09-27
+
+- Define single-owner disclosure separators, first-row exceptions and synthetic regression cases.
+- Add actual/preview navigation-material parity, matching backdrop and same-frame slider checks.
+- Scope manual update feedback to its initiating screen; distinguish it from active download progress.
+- Clarify concise About content, offline changelogs and bounded route coverage.
+- Documentation-only update; starter runtime and illustrations unchanged.
+
+中文：补充分隔线单一归属、导航材质预览同步、更新反馈页面归属与简明关于页的通用约定。
+
 ## [2.6.0] - 2026-09-22
 
 - Add focused day-navigation/resume and weather/clothing references.
